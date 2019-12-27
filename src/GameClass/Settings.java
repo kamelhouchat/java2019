@@ -1,9 +1,9 @@
 package GameClass;
 
 public class Settings {
-	public static final double SCENE_WIDTH = 1000;
-    public static final double SCENE_HEIGHT = 750;
-	public static final double STATUS_BAR_HEIGHT = 50;
+	public static final double SCENE_WIDTH = 750;
+    public static final double SCENE_HEIGHT = 500;
+	public static final double STATUS_BAR_HEIGHT = 120;
 
 
 	public static final int PIKEMAN_PRODUCT_COST = 100;
@@ -26,7 +26,7 @@ public class Settings {
     public static final int    ONAGER_HEALTH = 5;
     public static final double ONAGER_DAMAGE = 10.0;
     
-    //public static final int TOTAL_PLAYERS = 5;
-    public static final boolean IS_HUMAN = true;
+    public static final int TOTAL_PLAYERS = 5;
+    //public static final boolean IS_HUMAN = true;
    
 }
