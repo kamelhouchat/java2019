@@ -9,13 +9,18 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class Main extends Application{
@@ -23,15 +28,24 @@ public class Main extends Application{
 	Group root;
 	private Scene scene;
 	private Pane playfieldLayer = new Pane();
-	
 	Random rnd = new Random();
 	
 	private Image background_image = new Image(getClass().getResource("/images/background.jpg").toExternalForm(), Settings.SCENE_WIDTH, Settings.SCENE_HEIGHT, true , true);
 	private ImageView background = new ImageView(background_image);
+	//https://stackoverflow.com/questions/12630296/resizing-images-to-fit-the-parent-node
+	//background.fitWidthProperty().bind(scene.widthProperty());
 	private Image castle_imageS;
 	private Image castle_imageO;
 	private Image castle_imageN;
 	private Image castle_imageE;
+	private Image my_castle_S;
+	private Image my_castle_E;
+	private Image my_castle_N;
+	private Image my_castle_O;
+	private Image neutral_castle_S;
+	private Image neutral_castle_E;
+	private Image neutral_castle_N;
+	private Image neutral_castle_O;
 	
 	private Input input;
 	
@@ -39,8 +53,10 @@ public class Main extends Application{
 
 	private ArrayList<Castle> castles = new ArrayList<Castle>();
 	
+	private ArrayList<Castle> pressed_now = new ArrayList<Castle>();
+	
 	public void start(Stage primaryStage) {
-
+		
 		root = new Group();  //
 		root.getChildren().addAll(background); 
 		scene = new Scene(root, Settings.SCENE_WIDTH, Settings.SCENE_HEIGHT + Settings.STATUS_BAR_HEIGHT);
@@ -48,11 +64,14 @@ public class Main extends Application{
 		primaryStage.setScene(scene);
 		primaryStage.setResizable(false);
 		primaryStage.show();
+		background.fitWidthProperty().bind(primaryStage.widthProperty());
+		background.fitHeightProperty().bind(primaryStage.heightProperty());
 		
 		//root.getChildren().add(playfieldLayer);
 		playfieldLayer = new Pane();
 		root.getChildren().add(playfieldLayer);
 		
+		if (Settings.SCENE_WIDTH > 9)
 		loadGame();
 		
 		new AnimationTimer() {
@@ -68,6 +87,14 @@ public class Main extends Application{
 		castle_imageO = new Image(getClass().getResource("/images/carreO.jpg").toExternalForm(), 50, 50, true, true);
 		castle_imageN = new Image(getClass().getResource("/images/carreN.jpg").toExternalForm(), 50, 50, true, true);
 		castle_imageE = new Image(getClass().getResource("/images/carreE.jpg").toExternalForm(), 50, 50, true, true);
+		my_castle_S = new Image(getClass().getResource("/images/my_castleS.jpg").toExternalForm(), 50, 50, true, true);
+		my_castle_E = new Image(getClass().getResource("/images/my_castleE.jpg").toExternalForm(), 50, 50, true, true);
+		my_castle_N = new Image(getClass().getResource("/images/my_castleN.jpg").toExternalForm(), 50, 50, true, true);
+		my_castle_O = new Image(getClass().getResource("/images/my_castleO.jpg").toExternalForm(), 50, 50, true, true);
+		neutral_castle_S = new Image(getClass().getResource("/images/neutre_castleS.jpg").toExternalForm(), 50, 50, true, true);
+		neutral_castle_E = new Image(getClass().getResource("/images/neutre_castleE.jpg").toExternalForm(), 50, 50, true, true);
+		neutral_castle_N = new Image(getClass().getResource("/images/neutre_castleN.jpg").toExternalForm(), 50, 50, true, true);
+		neutral_castle_O = new Image(getClass().getResource("/images/neutre_castleO.jpg").toExternalForm(), 50, 50, true, true);
 
 		input = new Input(scene);
 		input.addListeners();
@@ -85,7 +112,8 @@ public class Main extends Application{
 	
 	public void createStatusBar() {
 		HBox statusBar = new HBox();
-		infoMessage.setText("                                       -- Dukes of the Realm --");
+		infoMessage.setText("-- Dukes of the Realm --");
+		statusBar.setAlignment(Pos.CENTER);
 		statusBar.getChildren().addAll(infoMessage);
 		statusBar.getStyleClass().add("statusBar");
 		statusBar.relocate(0, Settings.SCENE_HEIGHT);
@@ -96,7 +124,7 @@ public class Main extends Application{
 	private void createCastles() {
 		boolean not_found = true;
 		boolean taken = true ;
-		boolean mine = true ;
+		boolean my = true ;
 		int generated_taken ;
 		double generated_x ; 
 		double generated_y ;
@@ -109,89 +137,60 @@ public class Main extends Application{
 				
 				generated_y = ThreadLocalRandom.current().nextDouble(( Settings.SCENE_HEIGHT - Settings.STATUS_BAR_HEIGHT ) * 0.05,
 						( Settings.SCENE_HEIGHT - Settings.STATUS_BAR_HEIGHT ) * 0.95 - castle_imageS.getHeight());
-				for(int j = 0; j < castles.size(); j++) {
-					double current_caslte_x = castles.get(j).getX(); 
-					double current_caslte_y = castles.get(j).getY();
-					if ( Math.abs(current_caslte_x - generated_x) > 100 || Math.abs(current_caslte_y - generated_y) > 100)
-						not_found = false;
+				if (i == 0) {
+					not_found = false;
 				}
-				if (i == 0) break;  
+				else {
+					for(int j = 0; j < castles.size(); j++) {
+						double current_caslte_x = castles.get(j).getX(); 
+						double current_caslte_y = castles.get(j).getY();
+						if ( Math.sqrt(Math.pow(Math.abs(current_caslte_x - generated_x), 2) + Math.pow((Math.abs(current_caslte_y - generated_y)), 2) ) < Settings.MIN_DISTANCE_2_CASTLES)
+							break;
+						else
+							if(j == castles.size()-1)
+								not_found = false;
+					}	
+				}  
 			}while(not_found);
 			
 			Door door = new Door();
 			
 			switch(door.getDirection()) {
 			case('S'):
-				castles.add( new Castle(playfieldLayer, castle_imageS, generated_x, generated_y, Integer.toString(i), 0, 1, taken, door, 1, 1, 1, mine));
+				if (my)
+					castles.add( new Castle(playfieldLayer, my_castle_S, generated_x, generated_y, Integer.toString(i), 0, 1, taken, door, 3, 3, 3, my));
+				else if (!taken)
+					castles.add( new Castle(playfieldLayer, neutral_castle_S, generated_x, generated_y, "N", 0, 1, taken, door, 3, 3, 3, my));
+				else
+					castles.add( new Castle(playfieldLayer, castle_imageS, generated_x, generated_y, Integer.toString(i), 0, 1, taken, door, 3, 3, 3, my));
 				break;
 			case('O'):
-				castles.add( new Castle(playfieldLayer, castle_imageO, generated_x, generated_y, Integer.toString(i), 0, 1, taken, door, 1, 1, 1, mine));
+				if (my)
+					castles.add( new Castle(playfieldLayer, my_castle_O, generated_x, generated_y, Integer.toString(i), 0, 1, taken, door, 3, 3, 3, my));
+				else if (!taken)
+					castles.add( new Castle(playfieldLayer, neutral_castle_O, generated_x, generated_y, "N", 0, 1, taken, door, 3, 3, 3, my));
+				else
+					castles.add( new Castle(playfieldLayer, castle_imageO, generated_x, generated_y, Integer.toString(i), 0, 1, taken, door, 3, 3, 3, my));
 				break;
 			case('N'):
-				castles.add( new Castle(playfieldLayer, castle_imageN, generated_x, generated_y, Integer.toString(i), 0, 1, taken, door, 1, 1, 1, mine));
+				if (my)
+					castles.add( new Castle(playfieldLayer, my_castle_N, generated_x, generated_y, Integer.toString(i), 0, 1, taken, door, 3, 3, 3, my));					
+				else if (!taken)
+					castles.add( new Castle(playfieldLayer, neutral_castle_N, generated_x, generated_y, "N", 0, 1, taken, door, 3, 3, 3, my));
+				else
+					castles.add( new Castle(playfieldLayer, castle_imageN, generated_x, generated_y, Integer.toString(i), 0, 1, taken, door, 3, 3, 3, my));
 				break;
 			case('E'):
-				castles.add( new Castle(playfieldLayer, castle_imageE, generated_x, generated_y, Integer.toString(i), 0, 1, taken, door, 1, 1, 1, mine));
+				if (my)
+					castles.add( new Castle(playfieldLayer, my_castle_E, generated_x, generated_y, Integer.toString(i), 0, 1, taken, door, 3, 3, 3, my));					
+				else if (!taken)
+					castles.add( new Castle(playfieldLayer, neutral_castle_E, generated_x, generated_y, "N", 0, 1, taken, door, 3, 3, 3, my));
+				else
+					castles.add( new Castle(playfieldLayer, castle_imageE, generated_x, generated_y, Integer.toString(i), 0, 1, taken, door, 3, 3, 3, my));
 				break;
-			}
+			}	
 			
-			mine = false ;
-			generated_taken = rnd.nextInt(2);
-			switch (generated_taken) {
-				case 0 :
-					taken = true ;
-					break ;
-				case 1 : 
-					taken = false ;
-					break ;
-				default:
-					break;
-			}
-		}
-		
-		/*for(int i = 0; i < 5; i++ ) {
-			switch(i) {
-			case (0):
-				x = Settings.SCENE_WIDTH * 0.05;
-				y = ( Settings.SCENE_HEIGHT - Settings.STATUS_BAR_HEIGHT ) * 0.05;
-				break;
-			case (1):
-				x = Settings.SCENE_WIDTH * 0.05;
-				y = ( Settings.SCENE_HEIGHT - Settings.STATUS_BAR_HEIGHT ) * 0.95;
-				break;
-			case (2):
-				x = Settings.SCENE_WIDTH * 0.95 - castle_imageS.getWidth();
-				y = ( Settings.SCENE_HEIGHT - Settings.STATUS_BAR_HEIGHT ) * 0.05;
-				break;
-			case (3):
-				x = Settings.SCENE_WIDTH * 0.95 - castle_imageS.getWidth();
-				y = ( Settings.SCENE_HEIGHT - Settings.STATUS_BAR_HEIGHT ) * 0.95;
-				break;
-			case (4):
-				x = (Settings.SCENE_WIDTH - castle_imageS.getWidth()) / 2.0;
-				y = ( ( Settings.SCENE_HEIGHT - Settings.STATUS_BAR_HEIGHT ) ) / 2.0;
-				break;
-			default :
-				break;
-			}
-		
 			
-			Door door = new Door();
-			
-			switch(door.getDirection()) {
-			case('S'):
-				castles.add( new Castle(playfieldLayer, castle_imageS, x, y, Integer.toString(i), 0, 1, taken, door, 1, 1, 1, my));
-				break;
-			case('O'):
-				castles.add( new Castle(playfieldLayer, castle_imageO, x, y, Integer.toString(i), 0, 1, taken, door, 1, 1, 1, my));
-				break;
-			case('N'):
-				castles.add( new Castle(playfieldLayer, castle_imageN, x, y, Integer.toString(i), 0, 1, taken, door, 1, 1, 1, my));
-				break;
-			case('E'):
-				castles.add( new Castle(playfieldLayer, castle_imageE, x, y, Integer.toString(i), 0, 1, taken, door, 1, 1, 1, my));
-				break;
-			}
 			
 			my = false ;
 			generated_taken = rnd.nextInt(2);
@@ -203,16 +202,31 @@ public class Main extends Application{
 					taken = false ;
 					break ;
 			}
-		}*/
-		
+			if (i == 0) taken = true ;
+			if (i == 1) taken = false ;
+		}
+
 		for (Castle castle : castles) {
-			castle.getView().setOnMousePressed(e -> {
+			castle.getView().setOnMousePressed(e -> {				
+				if (pressed_now.size() == 1) {
+					if (!castle.isMy()) {
+						display(pressed_now.get(0), castle);
+						pressed_now.clear();
+					}
+					else {
+						pressed_now.clear();
+						pressed_now.add(castle);
+					}
+				}
+				else if (castle.isMy()) {
+					pressed_now.clear();
+					pressed_now.add(castle);
+				}
 				showStatusInStatusBar(castle);
 				e.consume();
-			});	
+			});
 		}
-		
-		
+
 		/*player.getView().setOnContextMenuRequested(e -> {
 			ContextMenu contextMenu = new ContextMenu();
 			MenuItem low = new MenuItem("Slow");
@@ -226,8 +240,105 @@ public class Main extends Application{
 		});*/
 	}
 	
+	public void display(Castle castle, Castle to_attack) {
+		
+		Stage popupwindow=new Stage();
+		      
+		popupwindow.initModality(Modality.APPLICATION_MODAL);
+		popupwindow.setTitle("Attack !");
+		popupwindow.setResizable(false);
+		
+		Button close = new Button("Close !");
+		Button attack = new Button("Attack !");
+		
+		Label onager_label = new Label("   Onager :  "+castle.getNb_onager_target()+"  ");
+		Button more_onager = new Button("+");
+		Button less_onager = new Button("-");
+		
+		Label pikeman_label = new Label("  Pikeman : "+castle.getNb_pikeman_target()+"  ");
+		Button more_pikeman = new Button("+");
+		Button less_pikeman = new Button("-");
+		
+		Label knight_label = new Label("   Knight :   "+castle.getNb_knight_target()+"  ");
+		Button more_knight = new Button("+");
+		Button less_knight = new Button("-");
+		     
+		HBox onager_line = new HBox();
+		HBox pikeman_line = new HBox();
+		HBox knight_line = new HBox();
+		HBox button_line = new HBox();
+		
+		onager_line.getChildren().addAll(less_onager,onager_label,more_onager);
+		pikeman_line.getChildren().addAll(less_pikeman,pikeman_label,more_pikeman);
+		knight_line.getChildren().addAll(less_knight,knight_label,more_knight);
+		button_line.getChildren().addAll(close,attack);
+		
+		onager_line.setAlignment(Pos.CENTER);
+		pikeman_line.setAlignment(Pos.CENTER);
+		knight_line.setAlignment(Pos.CENTER);
+		button_line.setAlignment(Pos.CENTER);
+		
+		close.setOnAction(e -> {
+			castle.setNb_knight_target(0);
+			castle.setNb_onager_target(0);
+			castle.setNb_pikeman_target(0);
+			popupwindow.close();
+		});
+		less_onager.setOnAction(e -> {
+			if (castle.getNb_onager_target() > 0) {
+				castle.setNb_onager_target(castle.getNb_onager_target()-1);
+				onager_label.setText("   Onager :  "+castle.getNb_onager_target()+"  ");
+			}
+		});
+		more_onager.setOnAction(e -> {
+			if (castle.getNb_onager_target()+1 <= castle.getOnagers_list().size()) {
+				castle.setNb_onager_target(castle.getNb_onager_target()+1);
+				onager_label.setText("   Onager :  "+castle.getNb_onager_target()+"  ");
+			}
+		});
+		less_pikeman.setOnAction(e -> {
+			if (castle.getNb_pikeman_target() > 0) {
+				castle.setNb_pikeman_target(castle.getNb_pikeman_target()-1);
+				pikeman_label.setText("  Pikeman : "+castle.getNb_pikeman_target()+"  ");
+			}
+		});
+		more_pikeman.setOnAction(e -> {
+			if (castle.getNb_pikeman_target()+1 <= castle.getPikeman_list().size()) {
+				castle.setNb_pikeman_target(castle.getNb_pikeman_target()+1);
+				pikeman_label.setText("  Pikeman : "+castle.getNb_pikeman_target()+"  ");
+			}
+		});
+		less_knight.setOnAction(e -> {
+			if (castle.getNb_knight_target() > 0) {
+				castle.setNb_knight_target(castle.getNb_knight_target()-1);
+				knight_label.setText("   Knight :   "+castle.getNb_knight_target()+"  ");
+			}
+		});
+		more_knight.setOnAction(e -> {
+			if (castle.getNb_knight_target()+1 <= castle.getKnight_list().size()) {
+				castle.setNb_knight_target(castle.getNb_knight_target()+1);
+				knight_label.setText("   Knight :   "+castle.getNb_knight_target()+"  ");
+			}
+		});
+		attack.setOnAction(e -> {
+			castle.setTarget(to_attack);
+			popupwindow.close();
+		});
+		
+		
+		VBox layout= new VBox();      
+		layout.getChildren().addAll(onager_line, pikeman_line, knight_line, button_line);
+		layout.setAlignment(Pos.CENTER);
+		      
+		Scene scene1= new Scene(layout, 150, 150);
+		      
+		popupwindow.setScene(scene1);      
+		popupwindow.showAndWait();
+	}
+	
 	private void showStatusInStatusBar(Castle castle) {
-		infoMessage.setText("Duke : "+castle.getDuke()+" | Level : "+castle.getLevel()+" | Treasure : "+castle.getTreasure());
+		infoMessage.setText("Duke : "+castle.getDuke()+" | Level : "+castle.getLevel()+" | Returned : "+castle.getReturned()+" | O : "+castle.getOnagers_list().size()
+				+" <-> K : "+castle.getKnight_list().size()+" <-> P : "+castle.getPikeman_list().size()+" | Treasure : "+castle.getTreasure());
 	}
 	
 	public static void main(String[] args) {

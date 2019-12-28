@@ -12,11 +12,14 @@ public class Castle extends Sprite{
 	private int level ;
 	
 	private boolean taken = true ;
-	private boolean mine ;
+	private boolean my ;
 
 	private Door door ;
+	
 	private Castle target ;
-	private int nb_soldiers_target ;
+	private int nb_onager_target = 0 ;
+	private int nb_pikeman_target = 0 ;
+	private int nb_knight_target = 0 ;
 	
 	private int returned ;
 	
@@ -30,13 +33,14 @@ public class Castle extends Sprite{
 	
 	
 	public Castle(Pane layer, Image image, double x, double y, String duke, int treasure, 
-			int level, boolean taken, Door door, int nbOnagres, int nbPikemans, int nbKnights, boolean mine) {
+			int level, boolean taken, Door door, int nbOnagres, int nbPikemans, int nbKnights, boolean my) {
 		super(layer, image, x, y);
 		this.duke = duke;
 		this.treasure = treasure;
 		this.level = level;
 		this.taken = taken;
 		this.door = door;
+		this.my = my;
 		
 		for (int i = 0; i < nbOnagres; i++) {
 			this.onagers_list.add(new Onager(layer, onager_image, x+onager_image.getWidth()/2, y+onager_image.getHeight()/2, 0, 0, 0, 0, 0));
@@ -112,12 +116,34 @@ public class Castle extends Sprite{
 		this.target = target;
 	}
 	
-	public int getNb_soldiers() {
-		return nb_soldiers_target;
-	}
 	
-	public void setNb_soldiers(int nb_soldiers) {
-		this.nb_soldiers_target = nb_soldiers;
+	public int getNb_onager_target() {
+		return nb_onager_target;
+	}
+
+
+	public void setNb_onager_target(int nb_onager_target) {
+		this.nb_onager_target = nb_onager_target;
+	}
+
+
+	public int getNb_pikeman_target() {
+		return nb_pikeman_target;
+	}
+
+
+	public void setNb_pikeman_target(int nb_pikeman_target) {
+		this.nb_pikeman_target = nb_pikeman_target;
+	}
+
+
+	public int getNb_knight_target() {
+		return nb_knight_target;
+	}
+
+
+	public void setNb_knight_target(int nb_knight_target) {
+		this.nb_knight_target = nb_knight_target;
 	}
 
 
@@ -161,13 +187,13 @@ public class Castle extends Sprite{
 	}
 
 
-	public boolean isMine() {
-		return mine;
+	public boolean isMy() {
+		return my;
 	}
 
 
-	public void setMine(boolean mine) {
-		this.mine = mine;
+	public void setMy(boolean my) {
+		this.my = my;
 	} 
 
 }
