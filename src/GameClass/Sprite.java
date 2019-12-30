@@ -1,10 +1,17 @@
 package GameClass;
 
+import java.io.Serializable;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
-public abstract class Sprite {
+public abstract class Sprite implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3676656290971406742L;
+
 	private Pane layer ;
 
 	private ImageView imageView;
@@ -79,5 +86,21 @@ public abstract class Sprite {
     public boolean collidesWith(Sprite sprite) {
     	return getView().getBoundsInParent().intersects(sprite.getView().getBoundsInParent());
     }
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Sprite other = (Sprite) obj;
+		if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x))
+			return false;
+		if (Double.doubleToLongBits(y) != Double.doubleToLongBits(other.y))
+			return false;
+		return true;
+	}
     
 }

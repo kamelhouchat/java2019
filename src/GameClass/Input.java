@@ -1,9 +1,6 @@
 package GameClass;
 
 import static javafx.scene.input.KeyCode.ESCAPE;
-import static javafx.scene.input.KeyCode.P;
-import static javafx.scene.input.KeyCode.R;
-
 
 import java.util.BitSet;
 
@@ -70,14 +67,35 @@ public class Input {
 
 
 	public boolean isPause() {
-		return is(P);
-	}
-	
-	public boolean isResume() {
-		return is(R);
+		return is(KeyCode.SPACE);
 	}
 	
 	public boolean isExit() {
 		return is(ESCAPE);
 	}
+	
+	public boolean isIncreaseLevel() {
+		return is(KeyCode.I); 
+	}
+	
+	public boolean isSave() {
+		return is(KeyCode.S); 
+	}
+	
+	public boolean isLoad() {
+		return is(KeyCode.L); 
+	}
+	
+	public boolean isProductOnager() {
+		return is(KeyCode.O);
+	}
+	
+	public boolean isProductPikeman() {
+		return is(KeyCode.P);
+	}
+	
+	public boolean isProductKight() {
+		return is(KeyCode.K);
+	}
+	
 }

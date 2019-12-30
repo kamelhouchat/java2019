@@ -1,12 +1,17 @@
 package GameClass;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
-public class Castle extends Sprite{
+public class Castle extends Sprite implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8091028447286769788L;
 	private String duke ;
 	private int treasure ;
 	private int level ;
@@ -27,9 +32,11 @@ public class Castle extends Sprite{
 	private ArrayList<Pikeman> pikeman_list = new ArrayList<Pikeman>();
 	private ArrayList<Knight> knight_list = new ArrayList<Knight>();
 	
-	private Image onager_image = new Image(getClass().getResource("/images/onagre.png").toExternalForm(), 30, 30, true, true);
-	private Image pikeman_image = new Image(getClass().getResource("/images/pikemen.png").toExternalForm(), 30, 30, true, true);
-	private Image knight_image = new Image(getClass().getResource("/images/knight.png").toExternalForm(), 30, 30, true, true);
+	private ArrayList<Production_unit> production_queue = new ArrayList<Production_unit>();
+	
+	Image onager_image = new Image(getClass().getResource("/images/onagre.png").toExternalForm(), 30, 30, true, true);
+	Image pikeman_image = new Image(getClass().getResource("/images/pikemen.png").toExternalForm(), 30, 30, true, true);
+	Image knight_image = new Image(getClass().getResource("/images/knight.png").toExternalForm(), 30, 30, true, true);
 	
 	
 	public Castle(Pane layer, Image image, double x, double y, String duke, int treasure, 
@@ -43,20 +50,34 @@ public class Castle extends Sprite{
 		this.my = my;
 		
 		for (int i = 0; i < nbOnagres; i++) {
-			this.onagers_list.add(new Onager(layer, onager_image, x+onager_image.getWidth()/2, y+onager_image.getHeight()/2, 0, 0, 0, 0, 0));
+			this.onagers_list.add(new Onager(layer, onager_image, x, y));
 			this.onagers_list.get(i).removeFromLayer();
 		}
 		
 		for (int i = 0; i < nbPikemans; i++) {
-			this.pikeman_list.add(new Pikeman(layer, pikeman_image, x+pikeman_image.getWidth()/2, y+pikeman_image.getHeight()/2, 0, 0, 0, 0, 0));
+			this.pikeman_list.add(new Pikeman(layer, pikeman_image, x, y));
 			this.pikeman_list.get(i).removeFromLayer();
 		}
 		
 		for (int i = 0; i < nbKnights; i++) {
-			this.knight_list.add(new Knight(layer, knight_image, x+knight_image.getWidth()/2, y+knight_image.getHeight()/2, 0, 0, 0, 0, 0));
+			this.knight_list.add(new Knight(layer, knight_image, x, y));
 			this.knight_list.get(i).removeFromLayer();
 		}
 		
+		if (this.taken)
+			this.returned = this.level * 10 ;
+		else 
+			this.returned = (this.level * 10)/10;
+	}
+
+		
+	public ArrayList<Production_unit> getProduction_queue() {
+		return production_queue;
+	}
+
+
+	public void setProduction_queue(ArrayList<Production_unit> production_queue) {
+		this.production_queue = production_queue;
 	}
 
 
@@ -196,4 +217,18 @@ public class Castle extends Sprite{
 		this.my = my;
 	} 
 
+	public void update_returned() {
+		if (this.taken)
+			this.returned = this.level * 10 ;
+		else 
+			this.returned = (this.level * 10)/10;
+	}
+	
+	public void update_treasure() {
+		this.treasure += this.returned;
+	}
+
+	public void increment_level() {
+		this.level ++ ;
+	}
 }

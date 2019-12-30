@@ -5,9 +5,13 @@ import javafx.scene.layout.Pane;
 
 public class Onager extends Soldier{
 
-	public Onager(Pane layer, Image image, double x, double y, int product_cost, int product_time, int health,
-			double damage, double speed) {
-		super(layer, image, x, y, product_cost, product_time, health, damage, speed);
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6645102720346637461L;
+
+	public Onager(Pane layer, Image image, double x, double y) {
+		super(layer, image, x, y, 0, 0, 0, 0, 0);
 		setProduct_cost(Settings.ONAGER_PRODUCT_COST);
 		setProduct_time(Settings.ONAGER_PRODUCT_TIME);
 		setHealth(Settings.ONAGER_HEALTH);

@@ -1,9 +1,14 @@
 package GameClass;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class Door {
+public class Door implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6750353227834583539L;
 	private char direction ;
 
 	public Door() {

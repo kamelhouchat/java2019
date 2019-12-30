@@ -5,9 +5,13 @@ import javafx.scene.layout.Pane;
 
 public class Knight extends Soldier{
 
-	public Knight(Pane layer, Image image, double x, double y, int product_cost, int product_time, int health,
-			double damage, double speed) {
-		super(layer, image, x, y, product_cost, product_time, health, damage, speed);
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8725555800868618506L;
+
+	public Knight(Pane layer, Image image, double x, double y) {
+		super(layer, image, x, y, 0, 0, 0, 0, 0);
 		setProduct_cost(Settings.KNIGHT_PRODUCT_COST);
 		setProduct_time(Settings.KNIGHT_PRODUCT_TIME);
 		setHealth(Settings.KNIGHT_HEALTH);

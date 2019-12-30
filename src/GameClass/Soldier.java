@@ -4,7 +4,11 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
 
-public abstract class Soldier extends Sprite{
+public abstract class Soldier extends Sprite {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8131521196948972410L;
 	private int product_cost ; 
 	private int product_time ; 
 	private int health	;
