@@ -65,6 +65,7 @@ public class Main extends Application{
 	
 	private ArrayList<Castle> pressed_now = new ArrayList<Castle>();
 	private ArrayList<Castle> last_pressed = new ArrayList<Castle>();
+	private ArrayList<Target> targets = new ArrayList<Target>();
 	
 	public void start(Stage primaryStage) {
 		
@@ -155,15 +156,15 @@ public class Main extends Application{
 									else {
 										if (castle.getProduction_queue().get(0).getType_soldier() == 'O'){
 											castle.getOnagers_list().add(new Onager(playfieldLayer, castle.onager_image, castle.getX()-100, castle.getY()-100));
-											//castle.getOnagers_list().get(castle.getOnagers_list().size()-1).removeFromLayer();
+											castle.getOnagers_list().get(castle.getOnagers_list().size()-1).removeFromLayer();
 										}
 										if (castle.getProduction_queue().get(0).getType_soldier() == 'P'){
 											castle.getPikeman_list().add(new Pikeman(playfieldLayer, castle.pikeman_image, castle.getX()+100, castle.getY()+100));
-											//castle.getPikeman_list().get(castle.getPikeman_list().size()-1).removeFromLayer();
+											castle.getPikeman_list().get(castle.getPikeman_list().size()-1).removeFromLayer();
 										}
 										if (castle.getProduction_queue().get(0).getType_soldier() == 'K'){
 											castle.getKnight_list().add(new Knight(playfieldLayer, castle.knight_image, castle.getX()+50, castle.getY()+50));
-											//castle.getKnight_list().get(castle.getKnight_list().size()-1).removeFromLayer();
+											castle.getKnight_list().get(castle.getKnight_list().size()-1).removeFromLayer();
 										}
 									}
 									castle.getProduction_queue().remove(0);
@@ -171,6 +172,10 @@ public class Main extends Application{
 							}
 						}
 						
+						//MANAGE ATTACKS
+						castles.forEach(castle -> {
+							
+						});
 						
 				        lastUpdate = now ;
 				    }
@@ -184,8 +189,18 @@ public class Main extends Application{
 					System.exit(0);
 				}
 				else if (input.isIncreaseLevel()) {
-					if (pressed_now.size() > 0) 
-						IncreaseLevel(pressed_now.get(0));
+					boolean no_level_during_production ;
+					if (pressed_now.size() > 0) {
+						no_level_during_production = true ;
+						for (Production_unit prod : pressed_now.get(0).getProduction_queue()) {
+							if (prod.is_level()) {
+								ShowOnStatusBar("You already have a level in production");
+								last_pressed.clear();
+								no_level_during_production = false ;
+							}
+						}	
+						if (no_level_during_production) IncreaseLevel(pressed_now.get(0));
+					}
 				}
 				else if (input.isProductOnager()) {
 					if (pressed_now.size() > 0)
@@ -198,6 +213,14 @@ public class Main extends Application{
 				else if (input.isProductKight()) {
 					if (pressed_now.size() > 0)
 						ProductKnight(pressed_now.get(0));
+				}
+				else if (input.isRemoveLastItem()) {
+					if (pressed_now.size() > 0)
+						RemoveLastItemProd(pressed_now.get(0));
+				}
+				else if (input.isCancelQueue()) {
+					if (pressed_now.size() > 0)
+						CancelProduction(pressed_now.get(0));
 				}
 				else if (input.isSave()) {
 					//To code......
@@ -429,8 +452,10 @@ public class Main extends Application{
 					ContextMenu contextMenu = new ContextMenu();
 					MenuItem increase = new MenuItem("Increase the level");
 					for (Production_unit prod : castle.getProduction_queue()) {
-						if (prod.is_level()) 
+						if (prod.is_level()) {
 							increase.setDisable(true);
+							break ;
+						}
 					}
 					SeparatorMenuItem space = new SeparatorMenuItem();
 					//space.setDisable(true);
@@ -449,12 +474,8 @@ public class Main extends Application{
 					product_onager.setOnAction(evt -> ProductOnager(castle));
 					product_pikeman.setOnAction(evt -> ProductPikeman(castle));
 					product_knight.setOnAction(evt -> ProductKnight(castle));
-					remove_last_item.setOnAction(env -> {
-						
-					});
-					cancel_queue.setOnAction(env -> {
-						
-					});
+					remove_last_item.setOnAction(env -> RemoveLastItemProd(castle));
+					cancel_queue.setOnAction(env -> CancelProduction(castle));
 					
 					contextMenu.getItems().addAll(increase, space, product_onager, product_pikeman, product_knight, space_2, remove_last_item, cancel_queue);
 					contextMenu.show(castle.getView(), e.getScreenX(), e.getScreenY());
@@ -516,18 +537,46 @@ public class Main extends Application{
 	}
 	
 	public void RemoveLastItemProd(Castle castle) {
-		if (castle.isMy() && !castle.getProduction_queue().isEmpty())
+		if (castle.isMy() && !castle.getProduction_queue().isEmpty()) {
+			if (castle.getProduction_queue().get(castle.getProduction_queue().size()-1).is_level()) {
+				castle.setTreasure(castle.getTreasure()+(1000*castle.getProduction_queue().get(castle.getProduction_queue().size()-1).getLevel_to_product()));
+			}
+			else if (castle.getProduction_queue().get(castle.getProduction_queue().size()-1).is_soldier()) {
+				if (castle.getProduction_queue().get(castle.getProduction_queue().size()-1).getType_soldier() == 'O')
+					castle.setTreasure(castle.getTreasure()+Settings.ONAGER_PRODUCT_COST);
+				if (castle.getProduction_queue().get(castle.getProduction_queue().size()-1).getType_soldier() == 'P')
+					castle.setTreasure(castle.getTreasure()+Settings.PIKEMAN_PRODUCT_COST);
+				if (castle.getProduction_queue().get(castle.getProduction_queue().size()-1).getType_soldier() == 'K')
+					castle.setTreasure(castle.getTreasure()+Settings.KNIGHT_PRODUCT_COST);
+			}
 			castle.getProduction_queue().remove(castle.getProduction_queue().size()-1);
+		}
 	}
 	
 	public void CancelProduction(Castle castle) {
-		if (castle.isMy())
+		if (castle.isMy()) {
+			for (Production_unit prod : castle.getProduction_queue()) {
+				if (prod.is_level())
+					castle.setTreasure(castle.getTreasure()+(1000*prod.getLevel_to_product()));
+				else if (prod.is_soldier()) {
+					if (prod.getType_soldier() == 'O')
+						castle.setTreasure(castle.getTreasure()+Settings.ONAGER_PRODUCT_COST);
+					if (prod.getType_soldier() == 'P')
+						castle.setTreasure(castle.getLevel()+Settings.PIKEMAN_PRODUCT_COST);
+					if (prod.getType_soldier() == 'K')
+						castle.setTreasure(castle.getTreasure()+Settings.KNIGHT_PRODUCT_COST);
+				}
+			}
+			
 			castle.getProduction_queue().clear();
+		}
 	}
 	
 	public void display(Castle castle, Castle to_attack) {
 		
 		Stage popupwindow=new Stage();
+		Target target = new Target(castle, to_attack, 0, 0, 0);
+//		int nb_onager = 0, nb_pikemen = 0, nb_knights = 0; 
 		      
 		popupwindow.initModality(Modality.APPLICATION_MODAL);
 		popupwindow.setTitle("Order !");
@@ -536,15 +585,15 @@ public class Main extends Application{
 		Button close = new Button("Close !");
 		Button okbut = new Button("Order !");
 		
-		Label onager_label = new Label("   Onager :  "+castle.getNb_onager_target()+"  ");
+		Label onager_label = new Label("   Onager :  "+target.getNb_onager()+"  ");
 		Button more_onager = new Button("+");
 		Button less_onager = new Button("-");
 		
-		Label pikeman_label = new Label("  Pikeman : "+castle.getNb_pikeman_target()+"  ");
+		Label pikeman_label = new Label("  Pikeman : "+target.getNb_pikeman()+"  ");
 		Button more_pikeman = new Button("+");
 		Button less_pikeman = new Button("-");
 		
-		Label knight_label = new Label("   Knight :   "+castle.getNb_knight_target()+"  ");
+		Label knight_label = new Label("   Knight :   "+target.getNb_knight()+"  ");
 		Button more_knight = new Button("+");
 		Button less_knight = new Button("-");
 		     
@@ -563,50 +612,56 @@ public class Main extends Application{
 		knight_line.setAlignment(Pos.CENTER);
 		button_line.setAlignment(Pos.CENTER);
 		
-		close.setOnAction(e -> {
-			castle.setNb_knight_target(0);
-			castle.setNb_onager_target(0);
-			castle.setNb_pikeman_target(0);
-			popupwindow.close();
-		});
+		okbut.setDisable(true);
+		
+		close.setOnAction(e -> popupwindow.close());
 		less_onager.setOnAction(e -> {
-			if (castle.getNb_onager_target() > 0) {
-				castle.setNb_onager_target(castle.getNb_onager_target()-1);
-				onager_label.setText("   Onager :  "+castle.getNb_onager_target()+"  ");
+			if (target.getNb_onager() > 0) {
+				target.setNb_onager(target.getNb_onager()-1);
+				onager_label.setText("   Onager :  "+target.getNb_onager()+"  ");
+				if (target.getNb_knight() == 0 && target.getNb_onager() == 0 && target.getNb_pikeman() == 0)
+					okbut.setDisable(true);
 			}
 		});
 		more_onager.setOnAction(e -> {
-			if (castle.getNb_onager_target()+1 <= castle.getOnagers_list().size()) {
-				castle.setNb_onager_target(castle.getNb_onager_target()+1);
-				onager_label.setText("   Onager :  "+castle.getNb_onager_target()+"  ");
+			if (target.getNb_onager()+1 <= castle.getOnagers_list().size()) {
+				target.setNb_onager(target.getNb_onager()+1);
+				onager_label.setText("   Onager :  "+target.getNb_onager()+"  ");
+				okbut.setDisable(false);
 			}
 		});
 		less_pikeman.setOnAction(e -> {
-			if (castle.getNb_pikeman_target() > 0) {
-				castle.setNb_pikeman_target(castle.getNb_pikeman_target()-1);
-				pikeman_label.setText("  Pikeman : "+castle.getNb_pikeman_target()+"  ");
+			if (target.getNb_pikeman() > 0) {
+				target.setNb_pikeman(target.getNb_pikeman()-1);
+				pikeman_label.setText("  Pikeman : "+target.getNb_pikeman()+"  ");
+				if (target.getNb_knight() == 0 && target.getNb_onager() == 0 && target.getNb_pikeman() == 0)
+					okbut.setDisable(true);
 			}
 		});
 		more_pikeman.setOnAction(e -> {
-			if (castle.getNb_pikeman_target()+1 <= castle.getPikeman_list().size()) {
-				castle.setNb_pikeman_target(castle.getNb_pikeman_target()+1);
-				pikeman_label.setText("  Pikeman : "+castle.getNb_pikeman_target()+"  ");
+			if (target.getNb_pikeman()+1 <= castle.getPikeman_list().size()) {
+				target.setNb_pikeman(target.getNb_pikeman()+1);
+				pikeman_label.setText("  Pikeman : "+target.getNb_pikeman()+"  ");
+				okbut.setDisable(false);
 			}
 		});
 		less_knight.setOnAction(e -> {
-			if (castle.getNb_knight_target() > 0) {
-				castle.setNb_knight_target(castle.getNb_knight_target()-1);
-				knight_label.setText("   Knight :   "+castle.getNb_knight_target()+"  ");
+			if (target.getNb_knight() > 0) {
+				target.setNb_knight(target.getNb_knight()-1);
+				knight_label.setText("   Knight :   "+target.getNb_knight()+"  ");
+				if (target.getNb_knight() == 0 && target.getNb_onager() == 0 && target.getNb_pikeman() == 0)
+					okbut.setDisable(true);
 			}
 		});
 		more_knight.setOnAction(e -> {
-			if (castle.getNb_knight_target()+1 <= castle.getKnight_list().size()) {
-				castle.setNb_knight_target(castle.getNb_knight_target()+1);
-				knight_label.setText("   Knight :   "+castle.getNb_knight_target()+"  ");
+			if (target.getNb_knight()+1 <= castle.getKnight_list().size()) {
+				target.setNb_knight(target.getNb_knight()+1);
+				knight_label.setText("   Knight :   "+target.getNb_knight()+"  ");
+				okbut.setDisable(false);
 			}
 		});
 		okbut.setOnAction(e -> {
-			castle.setTarget(to_attack);
+			targets.add(target);
 			popupwindow.close();
 		});
 		

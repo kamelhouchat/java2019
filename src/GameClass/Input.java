@@ -98,4 +98,12 @@ public class Input {
 		return is(KeyCode.K);
 	}
 	
+	public boolean isRemoveLastItem() {
+		return is(KeyCode.R);
+	}
+	
+	public boolean isCancelQueue() {
+		return is(KeyCode.C);
+	}
+	
 }

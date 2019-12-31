@@ -21,11 +21,6 @@ public class Castle extends Sprite implements Serializable{
 
 	private Door door ;
 	
-	private Castle target ;
-	private int nb_onager_target = 0 ;
-	private int nb_pikeman_target = 0 ;
-	private int nb_knight_target = 0 ;
-	
 	private int returned ;
 	
 	private ArrayList<Onager> onagers_list = new ArrayList<Onager>();
@@ -128,45 +123,6 @@ public class Castle extends Sprite implements Serializable{
 	public void setDoor(Door door) {
 		this.door = door;
 	}
-	
-	public Castle getTarget() {
-		return target;
-	}
-	
-	public void setTarget(Castle target) {
-		this.target = target;
-	}
-	
-	
-	public int getNb_onager_target() {
-		return nb_onager_target;
-	}
-
-
-	public void setNb_onager_target(int nb_onager_target) {
-		this.nb_onager_target = nb_onager_target;
-	}
-
-
-	public int getNb_pikeman_target() {
-		return nb_pikeman_target;
-	}
-
-
-	public void setNb_pikeman_target(int nb_pikeman_target) {
-		this.nb_pikeman_target = nb_pikeman_target;
-	}
-
-
-	public int getNb_knight_target() {
-		return nb_knight_target;
-	}
-
-
-	public void setNb_knight_target(int nb_knight_target) {
-		this.nb_knight_target = nb_knight_target;
-	}
-
 
 	public int getReturned() {
 		return returned;
@@ -231,4 +187,5 @@ public class Castle extends Sprite implements Serializable{
 	public void increment_level() {
 		this.level ++ ;
 	}
+
 }
