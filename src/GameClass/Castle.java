@@ -8,9 +8,6 @@ import javafx.scene.layout.Pane;
 
 public class Castle extends Sprite implements Serializable{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8091028447286769788L;
 	private String duke ;
 	private int treasure ;
@@ -29,34 +26,34 @@ public class Castle extends Sprite implements Serializable{
 	
 	private ArrayList<Production_unit> production_queue = new ArrayList<Production_unit>();
 	
-	Image onager_image = new Image(getClass().getResource("/images/onagre.png").toExternalForm(), 30, 30, true, true);
-	Image pikeman_image = new Image(getClass().getResource("/images/pikemen.png").toExternalForm(), 30, 30, true, true);
-	Image knight_image = new Image(getClass().getResource("/images/knight.png").toExternalForm(), 30, 30, true, true);
+	Image onager_image = new Image(getClass().getResource("/images/onagre.png").toExternalForm(), 50, 50, true, true);
+	Image pikeman_image = new Image(getClass().getResource("/images/pikemen.png").toExternalForm(), 50, 50, true, true);
+	Image knight_image = new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true);
 	
 	
-	public Castle(Pane layer, Image image, double x, double y, String duke, int treasure, 
+	public Castle(Pane layer, Image image, double x, double y, double soldier_x, double soldier_y, String duke, int treasure, 
 			int level, boolean taken, Door door, int nbOnagres, int nbPikemans, int nbKnights, boolean my) {
 		super(layer, image, x, y);
+		this.removeFromLayer();
 		this.duke = duke;
 		this.treasure = treasure;
 		this.level = level;
 		this.taken = taken;
 		this.door = door;
 		this.my = my;
-		
 		for (int i = 0; i < nbOnagres; i++) {
-			this.onagers_list.add(new Onager(layer, onager_image, x, y));
-			this.onagers_list.get(i).removeFromLayer();
+			this.onagers_list.add(new Onager(layer, onager_image, soldier_x, soldier_y));
+			//this.onagers_list.get(i).removeFromLayer();
 		}
 		
 		for (int i = 0; i < nbPikemans; i++) {
-			this.pikeman_list.add(new Pikeman(layer, pikeman_image, x, y));
-			this.pikeman_list.get(i).removeFromLayer();
+			this.pikeman_list.add(new Pikeman(layer, pikeman_image, soldier_x, soldier_y));
+			//this.pikeman_list.get(i).removeFromLayer();
 		}
 		
 		for (int i = 0; i < nbKnights; i++) {
-			this.knight_list.add(new Knight(layer, knight_image, x, y));
-			this.knight_list.get(i).removeFromLayer();
+			this.knight_list.add(new Knight(layer, knight_image, soldier_x, soldier_y));
+			//this.knight_list.get(i).removeFromLayer();
 		}
 		
 		if (this.taken)

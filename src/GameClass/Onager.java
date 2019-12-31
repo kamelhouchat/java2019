@@ -10,7 +10,7 @@ public class Onager extends Soldier{
 	 */
 	private static final long serialVersionUID = -6645102720346637461L;
 
-	public Onager(Pane layer, Image image, double x, double y) {
+	public Onager(Pane layer, Image image, double x, double y ){
 		super(layer, image, x, y, 0, 0, 0, 0, 0);
 		setProduct_cost(Settings.ONAGER_PRODUCT_COST);
 		setProduct_time(Settings.ONAGER_PRODUCT_TIME);

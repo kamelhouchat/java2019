@@ -32,7 +32,7 @@ public abstract class Sprite implements Serializable{
 		this.imageView.relocate(x, y);
 		this.w = image.getWidth();
 		this.h = image.getHeight();
-		addToLayer();
+		//addToLayer();
 	}
     
     public void addToLayer() {

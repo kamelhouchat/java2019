@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-//import javax.swing.text.Element;
-//import javax.swing.text.html.ImageView;
-
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -42,8 +39,6 @@ public class Main extends Application{
 	
 	private Image background_image = new Image(getClass().getResource("/images/background.jpg").toExternalForm(), Settings.SCENE_WIDTH, Settings.SCENE_HEIGHT, true , true);
 	private ImageView background = new ImageView(background_image);
-	//https://stackoverflow.com/questions/12630296/resizing-images-to-fit-the-parent-node
-	//background.fitWidthProperty().bind(scene.widthProperty());
 	private Image castle_imageS;
 	private Image castle_imageO;
 	private Image castle_imageN;
@@ -91,7 +86,6 @@ public class Main extends Application{
 		background.fitWidthProperty().bind(primaryStage.widthProperty());
 		background.fitHeightProperty().bind(primaryStage.heightProperty());
 		
-		//root.getChildren().add(playfieldLayer);
 		playfieldLayer = new Pane();
 		root.getChildren().add(playfieldLayer);
 		
@@ -172,15 +166,43 @@ public class Main extends Application{
 							}
 						}
 						
-						//MANAGE ATTACKS
-						castles.forEach(castle -> {
-							
-						});
-						
+						//MANAGE ATTACKS AND ARMY TRANSFERS 
+						/*targets.forEach(target -> {
+							targets.get(0).getAttacking().getOnagers_list().get(0).addToLayer();
+						});*/
+						if (targets.size()>0)
+							update_targets(targets.get(0));
 				        lastUpdate = now ;
 				    }
 				}
 			
+			}
+			
+			private void update_targets(Target target) {
+				double x1 = 0, x2 = 0, y1 = 0, y2 = 0;
+				if (target.getAttacking().getX() < target.getTargetted().getX()) {
+					x1 = target.getAttacking().getX();
+					x2 = target.getTargetted().getX();
+				}
+				
+				else if (target.getAttacking().getX() > target.getTargetted().getX()) {
+					x2 = target.getAttacking().getX();
+					x1 = target.getTargetted().getX();
+				}
+				
+				if (target.getAttacking().getY() < target.getTargetted().getY()) {
+					y2 = target.getAttacking().getY();
+					y1 = target.getTargetted().getY();
+				}
+				
+				else if (target.getAttacking().getY() > target.getTargetted().getY()) {
+					y1 = target.getAttacking().getY();
+					y2 = target.getTargetted().getY();
+				}
+				
+				target.getSent_onagers_list().get(0).setDx(1);
+				target.getSent_onagers_list().get(0).setDy((y1-y2)/(x1-x2));
+				target.getSent_onagers_list().get(0).move();
 			}
 			
 			private void processInput(Input input, long now) throws IOException, ClassNotFoundException {
@@ -281,18 +303,18 @@ public class Main extends Application{
 
 
 	private void loadGame() {
-		castle_imageS = new Image(getClass().getResource("/images/carreS.jpg").toExternalForm(), 50, 50, true, true);
-		castle_imageO = new Image(getClass().getResource("/images/carreO.jpg").toExternalForm(), 50, 50, true, true);
-		castle_imageN = new Image(getClass().getResource("/images/carreN.jpg").toExternalForm(), 50, 50, true, true);
-		castle_imageE = new Image(getClass().getResource("/images/carreE.jpg").toExternalForm(), 50, 50, true, true);
-		my_castle_S = new Image(getClass().getResource("/images/my_castleS.jpg").toExternalForm(), 50, 50, true, true);
-		my_castle_E = new Image(getClass().getResource("/images/my_castleE.jpg").toExternalForm(), 50, 50, true, true);
-		my_castle_N = new Image(getClass().getResource("/images/my_castleN.jpg").toExternalForm(), 50, 50, true, true);
-		my_castle_O = new Image(getClass().getResource("/images/my_castleO.jpg").toExternalForm(), 50, 50, true, true);
-		neutral_castle_S = new Image(getClass().getResource("/images/neutre_castleS.jpg").toExternalForm(), 50, 50, true, true);
-		neutral_castle_E = new Image(getClass().getResource("/images/neutre_castleE.jpg").toExternalForm(), 50, 50, true, true);
-		neutral_castle_N = new Image(getClass().getResource("/images/neutre_castleN.jpg").toExternalForm(), 50, 50, true, true);
-		neutral_castle_O = new Image(getClass().getResource("/images/neutre_castleO.jpg").toExternalForm(), 50, 50, true, true);
+		castle_imageS = new Image(getClass().getResource("/images/carreS.jpg").toExternalForm(), 75, 75, true, true);
+		castle_imageO = new Image(getClass().getResource("/images/carreO.jpg").toExternalForm(), 75, 75, true, true);
+		castle_imageN = new Image(getClass().getResource("/images/carreN.jpg").toExternalForm(), 75, 75, true, true);
+		castle_imageE = new Image(getClass().getResource("/images/carreE.jpg").toExternalForm(), 75, 75, true, true);
+		my_castle_S = new Image(getClass().getResource("/images/my_castleS.jpg").toExternalForm(), 75, 75, true, true);
+		my_castle_E = new Image(getClass().getResource("/images/my_castleE.jpg").toExternalForm(), 75, 75, true, true);
+		my_castle_N = new Image(getClass().getResource("/images/my_castleN.jpg").toExternalForm(), 75, 75, true, true);
+		my_castle_O = new Image(getClass().getResource("/images/my_castleO.jpg").toExternalForm(), 75, 75, true, true);
+		neutral_castle_S = new Image(getClass().getResource("/images/neutre_castleS.jpg").toExternalForm(), 75, 75, true, true);
+		neutral_castle_E = new Image(getClass().getResource("/images/neutre_castleE.jpg").toExternalForm(), 75, 75, true, true);
+		neutral_castle_N = new Image(getClass().getResource("/images/neutre_castleN.jpg").toExternalForm(), 75, 75, true, true);
+		neutral_castle_O = new Image(getClass().getResource("/images/neutre_castleO.jpg").toExternalForm(), 75, 75, true, true);
 
 		input = new Input(scene);
 		input.addListeners();
@@ -326,6 +348,8 @@ public class Main extends Application{
 		int generated_taken ;
 		double generated_x ; 
 		double generated_y ;
+		double soldier_x;
+		double soldier_y;
 		int generated_treasure;
 		int generated_soldier_o;
 		int generated_soldier_p;
@@ -340,6 +364,10 @@ public class Main extends Application{
 				
 				generated_y = ThreadLocalRandom.current().nextDouble(( Settings.SCENE_HEIGHT - Settings.STATUS_BAR_HEIGHT ) * 0.05,
 						( Settings.SCENE_HEIGHT - Settings.STATUS_BAR_HEIGHT ) * 0.95 - castle_imageS.getHeight());
+				
+				soldier_x = generated_x + 12.5;
+				soldier_y = generated_y + 12.5;
+				
 				if (i == 0) {
 					not_found = false;
 				}
@@ -365,36 +393,60 @@ public class Main extends Application{
 			
 			switch(door.getDirection()) {
 			case('S'):
-				if (my)
-					castles.add( new Castle(playfieldLayer, my_castle_S, generated_x, generated_y, Integer.toString(i), 0, 1, taken, door, 3, 3, 3, my));
-				else if (!taken)
-					castles.add( new Castle(playfieldLayer, neutral_castle_S, generated_x, generated_y, "N", generated_treasure, generated_level, taken, door, generated_soldier_o, generated_soldier_p, generated_soldier_k, my));
-				else
-					castles.add( new Castle(playfieldLayer, castle_imageS, generated_x, generated_y, Integer.toString(i), 0, 1, taken, door, 3, 3, 3, my));
+				if (my) {
+					castles.add( new Castle(playfieldLayer, my_castle_S, generated_x, generated_y, soldier_x, soldier_y, Integer.toString(i), 0, 1, taken, door, 3, 3, 3, my));
+					castles.get(castles.size()-1).addToLayer();
+				}
+				else if (!taken) {
+					castles.add( new Castle(playfieldLayer, neutral_castle_S, generated_x, generated_y, soldier_x, soldier_y, "N", generated_treasure, generated_level, taken, door, generated_soldier_o, generated_soldier_p, generated_soldier_k, my));
+					castles.get(castles.size()-1).addToLayer();
+				}
+				else {
+					castles.add( new Castle(playfieldLayer, castle_imageS, generated_x, generated_y, soldier_x, soldier_y, Integer.toString(i), 0, 1, taken, door, 3, 3, 3, my));
+					castles.get(castles.size()-1).addToLayer();
+				}
 				break;
 			case('O'):
-				if (my)
-					castles.add( new Castle(playfieldLayer, my_castle_O, generated_x, generated_y, Integer.toString(i), 0, 1, taken, door, 3, 3, 3, my));
-				else if (!taken)
-					castles.add( new Castle(playfieldLayer, neutral_castle_O, generated_x, generated_y, "N", generated_treasure, generated_level, taken, door, generated_soldier_o, generated_soldier_p, generated_soldier_k, my));
-				else
-					castles.add( new Castle(playfieldLayer, castle_imageO, generated_x, generated_y, Integer.toString(i), 0, 1, taken, door, 3, 3, 3, my));
+				if (my) {
+					castles.add( new Castle(playfieldLayer, my_castle_O, generated_x, generated_y, soldier_x, soldier_y, Integer.toString(i), 0, 1, taken, door, 3, 3, 3, my));
+					castles.get(castles.size()-1).addToLayer();
+				}
+				else if (!taken) {
+					castles.add( new Castle(playfieldLayer, neutral_castle_O, generated_x, generated_y, soldier_x, soldier_y, "N", generated_treasure, generated_level, taken, door, generated_soldier_o, generated_soldier_p, generated_soldier_k, my));
+					castles.get(castles.size()-1).addToLayer();
+				}
+				else {
+					castles.add( new Castle(playfieldLayer, castle_imageO, generated_x, generated_y, soldier_x, soldier_y,Integer.toString(i), 0, 1, taken, door, 3, 3, 3, my));
+					castles.get(castles.size()-1).addToLayer();
+				}
 				break;
 			case('N'):
-				if (my)
-					castles.add( new Castle(playfieldLayer, my_castle_N, generated_x, generated_y, Integer.toString(i), 0, 1, taken, door, 3, 3, 3, my));					
-				else if (!taken)
-					castles.add( new Castle(playfieldLayer, neutral_castle_N, generated_x, generated_y, "N", generated_treasure, generated_level, taken, door, generated_soldier_o, generated_soldier_p, generated_soldier_k, my));
-				else
-					castles.add( new Castle(playfieldLayer, castle_imageN, generated_x, generated_y, Integer.toString(i), 0, 1, taken, door, 3, 3, 3, my));
+				if (my) {
+					castles.add( new Castle(playfieldLayer, my_castle_N, generated_x, generated_y, soldier_x, soldier_y,Integer.toString(i), 0, 1, taken, door, 3, 3, 3, my));
+					castles.get(castles.size()-1).addToLayer();
+				}
+				else if (!taken) {
+					castles.add( new Castle(playfieldLayer, neutral_castle_N, generated_x, generated_y, soldier_x, soldier_y,"N", generated_treasure, generated_level, taken, door, generated_soldier_o, generated_soldier_p, generated_soldier_k, my));
+					castles.get(castles.size()-1).addToLayer();
+				}
+				else {
+					castles.add( new Castle(playfieldLayer, castle_imageN, generated_x, generated_y, soldier_x, soldier_y, Integer.toString(i), 0, 1, taken, door, 3, 3, 3, my));
+					castles.get(castles.size()-1).addToLayer();
+				}
 				break;
 			case('E'):
-				if (my)
-					castles.add( new Castle(playfieldLayer, my_castle_E, generated_x, generated_y, Integer.toString(i), 0, 1, taken, door, 3, 3, 3, my));					
-				else if (!taken)
-					castles.add( new Castle(playfieldLayer, neutral_castle_E, generated_x, generated_y, "N", generated_treasure, generated_level, taken, door, generated_soldier_o, generated_soldier_p, generated_soldier_k, my));
-				else
-					castles.add( new Castle(playfieldLayer, castle_imageE, generated_x, generated_y, Integer.toString(i), 0, 1, taken, door, 3, 3, 3, my));
+				if (my) {
+					castles.add( new Castle(playfieldLayer, my_castle_E, generated_x, generated_y, soldier_x, soldier_y, Integer.toString(i), 0, 1, taken, door, 3, 3, 3, my));
+					castles.get(castles.size()-1).addToLayer();
+				}
+				else if (!taken) {
+					castles.add( new Castle(playfieldLayer, neutral_castle_E, generated_x, generated_y, soldier_x, soldier_y, "N", generated_treasure, generated_level, taken, door, generated_soldier_o, generated_soldier_p, generated_soldier_k, my));
+					castles.get(castles.size()-1).addToLayer();
+				}
+				else {
+					castles.add( new Castle(playfieldLayer, castle_imageE, generated_x, generated_y, soldier_x, soldier_y, Integer.toString(i), 0, 1, taken, door, 3, 3, 3, my));
+					castles.get(castles.size()-1).addToLayer();
+				}
 				break;
 			}	
 			
@@ -573,10 +625,12 @@ public class Main extends Application{
 	}
 	
 	public void display(Castle castle, Castle to_attack) {
+		ArrayList<Onager> onagers = new ArrayList<Onager>();
+		ArrayList<Pikeman> pikemen = new ArrayList<Pikeman>();
+		ArrayList<Knight> knights = new ArrayList<Knight>();
 		
 		Stage popupwindow=new Stage();
-		Target target = new Target(castle, to_attack, 0, 0, 0);
-//		int nb_onager = 0, nb_pikemen = 0, nb_knights = 0; 
+		Target target = new Target(castle, to_attack, 0, 0, 0, onagers, pikemen, knights);
 		      
 		popupwindow.initModality(Modality.APPLICATION_MODAL);
 		popupwindow.setTitle("Order !");
@@ -662,6 +716,27 @@ public class Main extends Application{
 		});
 		okbut.setOnAction(e -> {
 			targets.add(target);
+			
+			
+			for (int i = 0; i < target.getNb_onager(); i++ ) {
+				target.getAttacking().getOnagers_list().get(0).addToLayer();
+				target.getSent_onagers_list().add(target.getAttacking().getOnagers_list().get(0));
+				target.getAttacking().getOnagers_list().remove(0);
+			}
+			
+			for (int i = 0; i < target.getNb_knight(); i++ ) {
+				target.getAttacking().getKnight_list().get(0).addToLayer();
+				target.getSent_knight_list().add(target.getAttacking().getKnight_list().get(0));
+				target.getAttacking().getKnight_list().remove(0);
+			}
+			
+			for (int i = 0; i < target.getNb_pikeman(); i++ ) {
+				target.getAttacking().getPikeman_list().get(0).addToLayer();
+				target.getSent_pikeman_list().add(target.getAttacking().getPikeman_list().get(0));
+				target.getAttacking().getPikeman_list().remove(0);
+				
+			}
+			
 			popupwindow.close();
 		});
 		
@@ -683,6 +758,7 @@ public class Main extends Application{
 		
 	}
 	
+	@SuppressWarnings("unused")
 	private void ShowCenter(String texte, boolean stop_game_loop) {
 		HBox hbox = new HBox();
 		hbox.setPrefSize(Settings.SCENE_WIDTH, Settings.SCENE_HEIGHT);
@@ -696,6 +772,7 @@ public class Main extends Application{
 			gameLoop.stop();
 	}
 
+	@SuppressWarnings("unused")
 	private void HideCenter() {
 		root.getChildren().remove(root.getChildren().size()-1);
 	}

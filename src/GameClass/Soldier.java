@@ -23,6 +23,7 @@ public abstract class Soldier extends Sprite {
 	public Soldier(Pane layer, Image image, double x, double y, int product_cost, int product_time, int health,
 			double damage, double speed) {
 		super(layer, image, x, y);
+		removeFromLayer();
 		this.product_cost = product_cost;
 		this.product_time = product_time;
 		this.health = health;
@@ -96,7 +97,8 @@ public abstract class Soldier extends Sprite {
 
 	public void move() {
         x += dx;
-        y += dy;
+        y += dy * dx;
+        this.updateUI();
     }
 	
     public boolean isAlive() {
