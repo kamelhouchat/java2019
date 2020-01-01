@@ -171,38 +171,67 @@ public class Main extends Application{
 							targets.get(0).getAttacking().getOnagers_list().get(0).addToLayer();
 						});*/
 						if (targets.size()>0)
-							update_targets(targets.get(0));
+							update_targets(targets);
 				        lastUpdate = now ;
 				    }
 				}
 			
 			}
 			
-			private void update_targets(Target target) {
-				double x1 = 0, x2 = 0, y1 = 0, y2 = 0;
-				if (target.getAttacking().getX() < target.getTargetted().getX()) {
-					x1 = target.getAttacking().getX();
-					x2 = target.getTargetted().getX();
-				}
-				
-				else if (target.getAttacking().getX() > target.getTargetted().getX()) {
-					x2 = target.getAttacking().getX();
-					x1 = target.getTargetted().getX();
-				}
-				
-				if (target.getAttacking().getY() < target.getTargetted().getY()) {
-					y2 = target.getAttacking().getY();
-					y1 = target.getTargetted().getY();
-				}
-				
-				else if (target.getAttacking().getY() > target.getTargetted().getY()) {
-					y1 = target.getAttacking().getY();
-					y2 = target.getTargetted().getY();
-				}
-				
-				target.getSent_onagers_list().get(0).setDx(1);
-				target.getSent_onagers_list().get(0).setDy((y1-y2)/(x1-x2));
-				target.getSent_onagers_list().get(0).move();
+			private void update_targets(ArrayList<Target> targets) {
+				targets.forEach(target -> {
+					
+					if (target.getAttacking().getX() < target.getTargetted().getX()) {
+						double x1 = target.getAttacking().getX();
+						double x2 = target.getTargetted().getX();
+						double y1 = target.getAttacking().getY();
+						double y2 = target.getTargetted().getY();
+						
+						target.getSent_onagers_list().forEach(onager -> {
+							onager.setDx(1);
+							onager.setDy((y1-y2)/(x1-x2));
+							onager.move();
+						});
+						
+						target.getSent_knight_list().forEach(knight -> {
+							knight.setDx(1);
+							knight.setDy((y1-y2)/(x1-x2));
+							knight.move();
+						});
+						
+						target.getSent_pikeman_list().forEach(pikeman -> {
+							pikeman.setDx(1);
+							pikeman.setDy((y1-y2)/(x1-x2));
+							pikeman.move();
+						});
+					}
+					
+					else if (target.getAttacking().getX() > target.getTargetted().getX() ) {
+						double x2 = target.getAttacking().getX();
+						double x1 = target.getTargetted().getX();
+						double y2 = target.getAttacking().getY();
+						double y1 = target.getTargetted().getY();
+						
+						target.getSent_onagers_list().forEach(onager -> {
+							onager.setDx(-1);
+							onager.setDy((y1-y2)/(x1-x2));
+							onager.move();
+						});
+						
+						target.getSent_knight_list().forEach(knight -> {
+							knight.setDx(-1);
+							knight.setDy((y1-y2)/(x1-x2));
+							knight.move();
+						});
+						
+						target.getSent_pikeman_list().forEach(pikeman -> {
+							pikeman.setDx(-1);
+							pikeman.setDy((y1-y2)/(x1-x2));
+							pikeman.move();
+						});
+					}
+					
+				});
 			}
 			
 			private void processInput(Input input, long now) throws IOException, ClassNotFoundException {
