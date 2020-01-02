@@ -120,11 +120,10 @@ public class Target {
 				soldier.move();
 			}
 			else {
+				//soldier.moveInCircle(90, Settings.CASTLE_WIDTH, this.targetted.getCenterX(), this.targetted.getCenterY());
 				if (this.targetted.isMy()) {
 					switch (type) {
 					case 'O':
-//						soldiers.get(i).setX(targetted.getCenterX()+targetted.onager_image.getWidth()/2);
-//						soldiers.get(i).setX(targetted.getCenterX()+targetted.onager_image.getHeight()/2);
 						targetted.getOnagers_list().add(new Onager(targetted.getLayer(), targetted.onager_image, targetted.getCenterX()-targetted.onager_image.getWidth()/2, targetted.getCenterY()-targetted.onager_image.getHeight()/2));
 						break ;
 					case 'P':

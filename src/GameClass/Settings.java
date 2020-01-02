@@ -4,7 +4,8 @@ public class Settings {
 	public static double SCENE_WIDTH = 750;
     public static double SCENE_HEIGHT = 500;
 	public static final double STATUS_BAR_HEIGHT = SCENE_HEIGHT/5;
-
+	public static final double CASTLE_WIDTH = 50;
+	public static final double SOLDIER_WIDTH = 25;
 
 	public static final int PIKEMAN_PRODUCT_COST = 100;
 	public static final int PIKEMAN_PRODUCT_TIME = 5;
@@ -26,9 +27,8 @@ public class Settings {
     public static final int    ONAGER_HEALTH = 5;
     public static final double ONAGER_DAMAGE = 10.0;
     
-    public static final int TOTAL_PLAYERS = 5;
-    public static final int MIN_DISTANCE_2_CASTLES = 150;
-    public static final long TIME_PER_LAP = 60_000_000 ; //1000 * 1000 * 1000 ;//
-    //public static final boolean IS_HUMAN = true;
+    public static final int TOTAL_PLAYERS = 3;
+    public static final int MIN_DISTANCE_2_CASTLES = 250;
+    static final long TIME_PER_LAP = 60_000_000 ; //1000 * 1000 * 1000 ;//
    
 }

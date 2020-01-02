@@ -26,9 +26,9 @@ public class Castle extends Sprite implements Serializable{
 	
 	private ArrayList<Production_unit> production_queue = new ArrayList<Production_unit>();
 	
-	Image onager_image = new Image(getClass().getResource("/images/onagre.png").toExternalForm(), 50, 50, true, true);
-	Image pikeman_image = new Image(getClass().getResource("/images/pikemen.png").toExternalForm(), 50, 50, true, true);
-	Image knight_image = new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true);
+	Image onager_image = new Image(getClass().getResource("/images/onagre.png").toExternalForm(), Settings.SOLDIER_WIDTH, Settings.SOLDIER_WIDTH, true, true);
+	Image pikeman_image = new Image(getClass().getResource("/images/pikemen.png").toExternalForm(), Settings.SOLDIER_WIDTH, Settings.SOLDIER_WIDTH, true, true);
+	Image knight_image = new Image(getClass().getResource("/images/knight.png").toExternalForm(), Settings.SOLDIER_WIDTH, Settings.SOLDIER_WIDTH, true, true);
 	
 	
 	public Castle(Pane layer, Image image, double x, double y, String duke, int treasure, 

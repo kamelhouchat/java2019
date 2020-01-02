@@ -1,5 +1,6 @@
 package GameClass;
 
+import javafx.collections.SetChangeListener;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
@@ -99,6 +100,17 @@ public abstract class Soldier extends Sprite {
         x += dx;
         y += dy * dx;
         this.updateUI();
+    }
+	
+	public void moveInCircle(double a, double r, double cx, double cy) {//calcul a faire	
+    	centerX = ( cx + r * Math.cos(a)) - 1;
+    	centerY = ( cy + r * Math.sin(a)) - 1;
+    	this.updateUI();
+    }
+	
+	public boolean nearCastle(Sprite castle) {
+    	return ( dist(castle.getCenterX(), this.getCenterX(), castle.getCenterY(), this.getCenterY())) <= 
+    			dist(castle.getCenterX(), castle.getX(), castle.getCenterY(), castle.getY()) + dist(this.getCenterX(), this.getX(), this.getCenterY(), this.getY()) ;
     }
 	
     public boolean isAlive() {

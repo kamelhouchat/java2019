@@ -290,18 +290,18 @@ public class Main extends Application{
 
 
 	private void loadGame() {
-		castle_imageS = new Image(getClass().getResource("/images/carreS.jpg").toExternalForm(), 75, 75, true, true);
-		castle_imageO = new Image(getClass().getResource("/images/carreO.jpg").toExternalForm(), 75, 75, true, true);
-		castle_imageN = new Image(getClass().getResource("/images/carreN.jpg").toExternalForm(), 75, 75, true, true);
-		castle_imageE = new Image(getClass().getResource("/images/carreE.jpg").toExternalForm(), 75, 75, true, true);
-		my_castle_S = new Image(getClass().getResource("/images/my_castleS.jpg").toExternalForm(), 75, 75, true, true);
-		my_castle_E = new Image(getClass().getResource("/images/my_castleE.jpg").toExternalForm(), 75, 75, true, true);
-		my_castle_N = new Image(getClass().getResource("/images/my_castleN.jpg").toExternalForm(), 75, 75, true, true);
-		my_castle_O = new Image(getClass().getResource("/images/my_castleO.jpg").toExternalForm(), 75, 75, true, true);
-		neutral_castle_S = new Image(getClass().getResource("/images/neutre_castleS.jpg").toExternalForm(), 75, 75, true, true);
-		neutral_castle_E = new Image(getClass().getResource("/images/neutre_castleE.jpg").toExternalForm(), 75, 75, true, true);
-		neutral_castle_N = new Image(getClass().getResource("/images/neutre_castleN.jpg").toExternalForm(), 75, 75, true, true);
-		neutral_castle_O = new Image(getClass().getResource("/images/neutre_castleO.jpg").toExternalForm(), 75, 75, true, true);
+		castle_imageS = new Image(getClass().getResource("/images/carreS.jpg").toExternalForm(), Settings.CASTLE_WIDTH, Settings.CASTLE_WIDTH, true, true);
+		castle_imageO = new Image(getClass().getResource("/images/carreO.jpg").toExternalForm(), Settings.CASTLE_WIDTH, Settings.CASTLE_WIDTH, true, true);
+		castle_imageN = new Image(getClass().getResource("/images/carreN.jpg").toExternalForm(), Settings.CASTLE_WIDTH, Settings.CASTLE_WIDTH, true, true);
+		castle_imageE = new Image(getClass().getResource("/images/carreE.jpg").toExternalForm(), Settings.CASTLE_WIDTH, Settings.CASTLE_WIDTH, true, true);
+		my_castle_S = new Image(getClass().getResource("/images/my_castleS.jpg").toExternalForm(), Settings.CASTLE_WIDTH, Settings.CASTLE_WIDTH, true, true);
+		my_castle_E = new Image(getClass().getResource("/images/my_castleE.jpg").toExternalForm(), Settings.CASTLE_WIDTH, Settings.CASTLE_WIDTH, true, true);
+		my_castle_N = new Image(getClass().getResource("/images/my_castleN.jpg").toExternalForm(), Settings.CASTLE_WIDTH, Settings.CASTLE_WIDTH, true, true);
+		my_castle_O = new Image(getClass().getResource("/images/my_castleO.jpg").toExternalForm(), Settings.CASTLE_WIDTH, Settings.CASTLE_WIDTH, true, true);
+		neutral_castle_S = new Image(getClass().getResource("/images/neutre_castleS.jpg").toExternalForm(), Settings.CASTLE_WIDTH, Settings.CASTLE_WIDTH, true, true);
+		neutral_castle_E = new Image(getClass().getResource("/images/neutre_castleE.jpg").toExternalForm(), Settings.CASTLE_WIDTH, Settings.CASTLE_WIDTH, true, true);
+		neutral_castle_N = new Image(getClass().getResource("/images/neutre_castleN.jpg").toExternalForm(), Settings.CASTLE_WIDTH, Settings.CASTLE_WIDTH, true, true);
+		neutral_castle_O = new Image(getClass().getResource("/images/neutre_castleO.jpg").toExternalForm(), Settings.CASTLE_WIDTH, Settings.CASTLE_WIDTH, true, true);
 
 		input = new Input(scene);
 		input.addListeners();
@@ -357,7 +357,7 @@ public class Main extends Application{
 					for(int j = 0; j < castles.size(); j++) {
 						double current_caslte_x = castles.get(j).getX(); 
 						double current_caslte_y = castles.get(j).getY();
-						if ( Math.sqrt(Math.pow(Math.abs(current_caslte_x - generated_x), 2) + Math.pow((Math.abs(current_caslte_y - generated_y)), 2) ) < Settings.MIN_DISTANCE_2_CASTLES)
+						if ( castles.get(j).dist(current_caslte_x, generated_x, current_caslte_y, generated_y) < Settings.MIN_DISTANCE_2_CASTLES)
 							break;
 						else
 							if(j == castles.size()-1)

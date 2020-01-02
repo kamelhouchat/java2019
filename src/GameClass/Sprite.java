@@ -18,8 +18,17 @@ public abstract class Sprite implements Serializable{
 	
     protected double x;
     protected double y;
+    protected double centerX;
+    protected double centerY;
+    public void setCenterX(double centerX) {
+		this.centerX = centerX;
+	}
 
-    private double w;
+	public void setCenterY(double centerY) {
+		this.centerY = centerY;
+	}
+
+	private double w;
     private double h;
 
 
@@ -89,6 +98,16 @@ public abstract class Sprite implements Serializable{
     
     public boolean collidesWith(Sprite sprite) {
     	return getView().getBoundsInParent().intersects(sprite.getView().getBoundsInParent());
+    }
+    
+    public double dist(double x1, double x2, double y1, double y2) {
+    	double distance = Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
+    	return distance;
+    }
+    
+    public double arcLength( double x1, double x2, double y1, double y2, double xc, double yc) {
+    	double angle = Math.asin(dist( x1, x2, y1, y2)/dist(xc, x2, yc, y2));
+    	return 2 * Math.PI * angle / dist(xc, x2, yc, y2);
     }
 
 	@Override
