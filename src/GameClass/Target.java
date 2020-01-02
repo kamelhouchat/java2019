@@ -9,13 +9,14 @@ public class Target {
 	private int nb_onager = 0 ;
 	private int nb_pikeman = 0 ;
 	private int nb_knight = 0 ;
-	private ArrayList<Onager> sent_onagers_list = new ArrayList<Onager>();
-	private ArrayList<Pikeman> sent_pikeman_list = new ArrayList<Pikeman>();
-	private ArrayList<Knight> sent_knight_list = new ArrayList<Knight>();
+	private ArrayList<Soldier> sent_onagers_list = new ArrayList<Soldier>();
+	private ArrayList<Soldier> sent_pikeman_list = new ArrayList<Soldier>();
+	private ArrayList<Soldier> sent_knight_list = new ArrayList<Soldier>();
+	
 	
 	public Target(Castle attacking, Castle targetted, int nb_onager, int nb_pikeman, int nb_knight,
-			ArrayList<Onager> sent_onagers_list, ArrayList<Pikeman> sent_pikeman_list,
-			ArrayList<Knight> sent_knight_list) {
+			ArrayList<Soldier> sent_onagers_list, ArrayList<Soldier> sent_pikeman_list,
+			ArrayList<Soldier> sent_knight_list) {
 		super();
 		this.attacking = attacking;
 		this.targetted = targetted;
@@ -27,34 +28,31 @@ public class Target {
 		this.sent_knight_list = sent_knight_list;
 	}
 
-	public ArrayList<Onager> getSent_onagers_list() {
+	public ArrayList<Soldier> getSent_onagers_list() {
 		return sent_onagers_list;
 	}
 
 
-	public void setSent_onagers_list(ArrayList<Onager> sent_onagers_list) {
+	public void setSent_onagers_list(ArrayList<Soldier> sent_onagers_list) {
 		this.sent_onagers_list = sent_onagers_list;
 	}
-
-
-	public ArrayList<Pikeman> getSent_pikeman_list() {
+	
+	public ArrayList<Soldier> getSent_pikeman_list() {
 		return sent_pikeman_list;
 	}
 
-
-	public void setSent_pikeman_list(ArrayList<Pikeman> sent_pikeman_list) {
+	public void setSent_pikeman_list(ArrayList<Soldier> sent_pikeman_list) {
 		this.sent_pikeman_list = sent_pikeman_list;
 	}
 
-
-	public ArrayList<Knight> getSent_knight_list() {
+	public ArrayList<Soldier> getSent_knight_list() {
 		return sent_knight_list;
 	}
 
-	public void setSent_knight_list(ArrayList<Knight> sent_knight_list) {
+	public void setSent_knight_list(ArrayList<Soldier> sent_knight_list) {
 		this.sent_knight_list = sent_knight_list;
-	}	
-	
+	}
+
 	public Castle getAttacking() {
 		return attacking;
 	}
@@ -86,5 +84,64 @@ public class Target {
 	public void setNb_knight(int nb_knight) {
 		this.nb_knight = nb_knight;
 	}	
+	
+	public void send_target_to_castle() {			
+		
+		if (this.getAttacking().getX() < this.getTargetted().getX()) {
+			double x1 = this.getAttacking().getX();
+			double x2 = this.getTargetted().getX();
+			double y1 = this.getAttacking().getY();
+			double y2 = this.getTargetted().getY();
+			
+			this.check_collision(this.getSent_knight_list(), Settings.KNIGHT_SPEED, y1, y2, x1, x2, 'K');
+			this.check_collision(this.getSent_onagers_list(), Settings.ONAGER_SPEED, y1, y2, x1, x2, 'O');
+			this.check_collision(this.getSent_pikeman_list(), Settings.PIKEMAN_SPEED, y1, y2, x1, x2, 'P');
+		}
+		
+		else if (this.getAttacking().getX() > this.getTargetted().getX() ) {
+			double x2 = this.getAttacking().getX();
+			double x1 = this.getTargetted().getX();
+			double y2 = this.getAttacking().getY();
+			double y1 = this.getTargetted().getY();
+			
+			this.check_collision(this.getSent_knight_list(), -Settings.KNIGHT_SPEED, y1, y2, x1, x2, 'K');
+			this.check_collision(this.getSent_onagers_list(), -Settings.ONAGER_SPEED, y1, y2, x1, x2, 'O');
+			this.check_collision(this.getSent_pikeman_list(), -Settings.PIKEMAN_SPEED, y1, y2, x1, x2, 'P');
+		}
+			
+	}
+	
+	public void check_collision(ArrayList<Soldier> soldiers, double speed, double y1, double y2, double x1, double x2, char type) {
+		
+		soldiers.forEach(soldier -> {
+			soldier.setDx(speed);
+			soldier.setDy((y1-y2)/(x1-x2));
+			if (!soldier.collidesWith(this.targetted)) {
+				soldier.move();
+			}
+			else {
+				if (this.targetted.isMy()) {
+					switch (type) {
+					case 'O':
+//						soldiers.get(i).setX(targetted.getCenterX()+targetted.onager_image.getWidth()/2);
+//						soldiers.get(i).setX(targetted.getCenterX()+targetted.onager_image.getHeight()/2);
+						targetted.getOnagers_list().add(new Onager(targetted.getLayer(), targetted.onager_image, targetted.getCenterX()-targetted.onager_image.getWidth()/2, targetted.getCenterY()-targetted.onager_image.getHeight()/2));
+						break ;
+					case 'P':
+						targetted.getPikeman_list().add(new Pikeman(targetted.getLayer(), targetted.pikeman_image, targetted.getCenterX()-targetted.pikeman_image.getWidth()/2, targetted.getCenterY()-targetted.pikeman_image.getHeight()/2));
+						break ;
+					case 'K':
+						targetted.getKnight_list().add(new Knight(targetted.getLayer(), targetted.knight_image, targetted.getCenterX()-targetted.knight_image.getWidth()/2, targetted.getCenterY()-targetted.knight_image.getHeight()/2));
+						break ;
+					}
+					soldier.setRemovable(true);
+				}
+				else {
+					
+				}
+			}	
+		});
+	}
+	
 	
 }

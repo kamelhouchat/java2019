@@ -20,9 +20,9 @@ public class Castle extends Sprite implements Serializable{
 	
 	private int returned ;
 	
-	private ArrayList<Onager> onagers_list = new ArrayList<Onager>();
-	private ArrayList<Pikeman> pikeman_list = new ArrayList<Pikeman>();
-	private ArrayList<Knight> knight_list = new ArrayList<Knight>();
+	private ArrayList<Soldier> onagers_list = new ArrayList<Soldier>();
+	private ArrayList<Soldier> pikeman_list = new ArrayList<Soldier>();
+	private ArrayList<Soldier> knight_list = new ArrayList<Soldier>();
 	
 	private ArrayList<Production_unit> production_queue = new ArrayList<Production_unit>();
 	
@@ -31,7 +31,7 @@ public class Castle extends Sprite implements Serializable{
 	Image knight_image = new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true);
 	
 	
-	public Castle(Pane layer, Image image, double x, double y, double soldier_x, double soldier_y, String duke, int treasure, 
+	public Castle(Pane layer, Image image, double x, double y, String duke, int treasure, 
 			int level, boolean taken, Door door, int nbOnagres, int nbPikemans, int nbKnights, boolean my) {
 		super(layer, image, x, y);
 		this.removeFromLayer();
@@ -42,17 +42,17 @@ public class Castle extends Sprite implements Serializable{
 		this.door = door;
 		this.my = my;
 		for (int i = 0; i < nbOnagres; i++) {
-			this.onagers_list.add(new Onager(layer, onager_image, soldier_x, soldier_y));
+			this.onagers_list.add(new Onager(layer, onager_image, this.getCenterX()-onager_image.getWidth()/2, this.getCenterY()-onager_image.getHeight()/2));
 			//this.onagers_list.get(i).removeFromLayer();
 		}
 		
 		for (int i = 0; i < nbPikemans; i++) {
-			this.pikeman_list.add(new Pikeman(layer, pikeman_image, soldier_x, soldier_y));
+			this.pikeman_list.add(new Pikeman(layer, pikeman_image, this.getCenterX()-pikeman_image.getWidth()/2, this.getCenterY()-pikeman_image.getHeight()/2));
 			//this.pikeman_list.get(i).removeFromLayer();
 		}
 		
 		for (int i = 0; i < nbKnights; i++) {
-			this.knight_list.add(new Knight(layer, knight_image, soldier_x, soldier_y));
+			this.knight_list.add(new Knight(layer, knight_image, this.getCenterX()-knight_image.getWidth()/2, this.getCenterY()-knight_image.getHeight()/2));
 			//this.knight_list.get(i).removeFromLayer();
 		}
 		
@@ -131,32 +131,32 @@ public class Castle extends Sprite implements Serializable{
 	}
 
 
-	public ArrayList<Onager> getOnagers_list() {
+	public ArrayList<Soldier> getOnagers_list() {
 		return onagers_list;
 	}
 
 
-	public void setOnagers_list(ArrayList<Onager> onagers_list) {
+	public void setOnagers_list(ArrayList<Soldier> onagers_list) {
 		this.onagers_list = onagers_list;
 	}
 
 
-	public ArrayList<Pikeman> getPikeman_list() {
+	public ArrayList<Soldier> getPikeman_list() {
 		return pikeman_list;
 	}
 
 
-	public void setPikeman_list(ArrayList<Pikeman> pikeman_list) {
+	public void setPikeman_list(ArrayList<Soldier> pikeman_list) {
 		this.pikeman_list = pikeman_list;
 	}
 
 
-	public ArrayList<Knight> getKnight_list() {
+	public ArrayList<Soldier> getKnight_list() {
 		return knight_list;
 	}
 
 
-	public void setKnight_list(ArrayList<Knight> knight_list) {
+	public void setKnight_list(ArrayList<Soldier> knight_list) {
 		this.knight_list = knight_list;
 	}
 

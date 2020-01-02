@@ -35,6 +35,10 @@ public abstract class Sprite implements Serializable{
 		//addToLayer();
 	}
     
+    public Pane getLayer() {
+    	return layer ;
+    }
+    
     public void addToLayer() {
         this.layer.getChildren().add(this.imageView);
     }
