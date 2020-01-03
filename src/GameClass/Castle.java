@@ -2,11 +2,14 @@ package GameClass;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
 public class Castle extends Sprite implements Serializable{
+	
+	Random rnd = new Random();
 	
 	private static final long serialVersionUID = 8091028447286769788L;
 	private String duke ;
@@ -59,7 +62,7 @@ public class Castle extends Sprite implements Serializable{
 		if (this.taken)
 			this.returned = this.level * 10 ;
 		else 
-			this.returned = (this.level * 10)/10;
+			this.returned = this.level;
 	}
 
 		
@@ -183,6 +186,47 @@ public class Castle extends Sprite implements Serializable{
 
 	public void increment_level() {
 		this.level ++ ;
+	}
+	
+	public void damage_onager() {
+		onagers_list.get(0).damaged();
+		onagers_list.get(0).checkRemovability();
+	}
+	
+	public void damage_knight() {
+		knight_list.get(0).damaged();
+		knight_list.get(0).checkRemovability();
+	}
+	
+	public void damage_pikeman() {
+		pikeman_list.get(0).damaged();
+		pikeman_list.get(0).checkRemovability();
+	}
+	
+	public boolean damagedBy(Soldier soldier) {
+		int generated = 0 ;
+		for (int i = 0; i < soldier.getDamage() ; i++) {
+			generated = rnd.nextInt(3);
+			if (generated == 0) {
+				if (!onagers_list.isEmpty()) damage_onager();
+				else if (!knight_list.isEmpty()) damage_knight();
+				else if (!pikeman_list.isEmpty()) damage_pikeman();
+				else return false ;
+			}
+			else if (generated == 1) {
+				if (!knight_list.isEmpty()) damage_knight();
+				else if (!onagers_list.isEmpty()) damage_onager();
+				else if (!pikeman_list.isEmpty()) damage_pikeman();
+				else return false ;
+			}
+			else {
+				if (!pikeman_list.isEmpty()) damage_pikeman();
+				else if (!onagers_list.isEmpty()) damage_onager();
+				else if (!knight_list.isEmpty()) damage_knight();
+				else return false ;
+			}
+		}
+		return true ; 
 	}
 
 }

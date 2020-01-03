@@ -1,6 +1,7 @@
 package GameClass;
 
-import javafx.collections.SetChangeListener;
+import com.sun.org.apache.xml.internal.security.utils.HelperNodeList;
+
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
@@ -128,6 +129,10 @@ public abstract class Soldier extends Sprite {
 	public void checkRemovability() {
 		if (!isAlive())
 			remove();
+	}
+	
+	public void damaged() {
+		health -= 1 ;
 	}
 
 }

@@ -168,10 +168,7 @@ public class Main extends Application{
 							}
 						}
 						
-						//MANAGE ATTACKS AND ARMY TRANSFERS 
-						/*targets.forEach(target -> {
-							targets.get(0).getAttacking().getOnagers_list().get(0).addToLayer();
-						});*/
+						//MANAGE ARMY TRANSFERS 
 						if (!targets.isEmpty())
 							targets.forEach(target -> {
 								target.send_target_to_castle();
@@ -179,6 +176,13 @@ public class Main extends Application{
 								removeSoldiers(target.getSent_onagers_list());
 								removeSoldiers(target.getSent_pikeman_list());
 							});
+						
+						//MANAGE ATTACKS
+						castles.forEach(castle -> {
+							removeSoldiers(castle.getOnagers_list());
+							removeSoldiers(castle.getKnight_list());
+							removeSoldiers(castle.getPikeman_list());
+						});
 
 					
 						

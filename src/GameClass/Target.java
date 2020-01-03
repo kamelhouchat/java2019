@@ -3,7 +3,8 @@ package GameClass;
 import java.util.ArrayList;
 
 public class Target {
-	 
+	
+	private int troop_size = 0 ; 
 	private Castle attacking;
 	private Castle targetted;
 	private int nb_onager = 0 ;
@@ -26,6 +27,8 @@ public class Target {
 		this.sent_onagers_list = sent_onagers_list;
 		this.sent_pikeman_list = sent_pikeman_list;
 		this.sent_knight_list = sent_knight_list;
+		this.troop_size = sent_knight_list.size() + sent_onagers_list.size() + sent_pikeman_list.size() ;
+		
 	}
 
 	public ArrayList<Soldier> getSent_onagers_list() {
@@ -85,6 +88,10 @@ public class Target {
 		this.nb_knight = nb_knight;
 	}	
 	
+	/*public boolean send_out_of_door() {
+		
+	}*/
+	
 	public void send_target_to_castle() {			
 		
 		if (this.getAttacking().getX() < this.getTargetted().getX()) {
@@ -136,7 +143,14 @@ public class Target {
 					soldier.setRemovable(true);
 				}
 				else {
-					
+					if (!targetted.damagedBy(soldier)) {
+						targetted.getProduction_queue().clear();
+						targetted.setDuke(attacking.getDuke());
+						if (attacking.isMy()) {
+							targetted.setMy(true);
+						}
+					}
+					soldier.setRemovable(true);
 				}
 			}	
 		});
