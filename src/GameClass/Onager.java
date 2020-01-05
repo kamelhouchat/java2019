@@ -19,6 +19,4 @@ public class Onager extends Soldier{
 		setSpeed(Settings.ONAGER_SPEED);
 	}
 
-	
-	
 }

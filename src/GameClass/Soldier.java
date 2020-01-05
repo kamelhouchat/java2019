@@ -103,6 +103,48 @@ public abstract class Soldier extends Sprite {
         this.updateUI();
     }
 	
+	public void move_in_line() {
+        x += dx;
+        y += dy;
+        this.updateUI();
+    }
+	
+	public void moveLeft() {
+		setDx(-getSpeed());
+		move_in_line();
+	}
+	
+	public void moveRight() {
+		setDx(getSpeed());
+		move_in_line();
+	}
+	
+	public void moveUp() {
+		setDy(-getSpeed());
+		move_in_line();
+	}
+	
+	public void moveDown() {
+		setDy(getSpeed());
+		move_in_line();
+	}
+	
+	public void moveTo(Castle castle) {
+		if (this.x < castle.getX()) {
+			this.dx = this.speed ;
+			this.dy = (this.y-castle.getY())/(this.x-castle.getX());
+		}
+		else {
+			this.dx = -this.speed ;
+			this.dy = (castle.getY()-this.y)/(castle.getX()-this.x);
+		}
+		move();
+	}
+	
+	public void moveToOutOfDoor(Castle caslte) {
+		
+	}
+	
 	public void moveInCircle(double a, double r, double cx, double cy) {//calcul a faire	
     	centerX = ( cx + r * Math.cos(a)) - 1;
     	centerY = ( cy + r * Math.sin(a)) - 1;

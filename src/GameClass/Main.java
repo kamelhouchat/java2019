@@ -171,10 +171,14 @@ public class Main extends Application{
 						//MANAGE ARMY TRANSFERS 
 						if (!targets.isEmpty())
 							targets.forEach(target -> {
-								target.send_target_to_castle();
-								removeSoldiers(target.getSent_knight_list());
-								removeSoldiers(target.getSent_onagers_list());
-								removeSoldiers(target.getSent_pikeman_list());
+								if (!target.isOut_of_door())
+									target.send_out_of_door();
+								if (target.isOut_of_door()) {
+									target.send_target_to_castle();
+									removeSoldiers(target.getSent_knight_list());
+									removeSoldiers(target.getSent_onagers_list());
+									removeSoldiers(target.getSent_pikeman_list());	
+								}
 							});
 						
 						//MANAGE ATTACKS
