@@ -3,11 +3,15 @@ package GameClass;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
+/**
+ * 
+ * @author kamel
+ *
+ */
+
 public class Onager extends Soldier{
 
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -6645102720346637461L;
 
 	public Onager(Pane layer, Image image, double x, double y ){

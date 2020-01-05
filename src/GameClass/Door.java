@@ -33,5 +33,8 @@ public class Door implements Serializable{
 	public char getDirection() {
 		return direction;
 	}
+	public void setDirection(char dir ) {
+		this.direction = dir ;
+	}
 	
 }

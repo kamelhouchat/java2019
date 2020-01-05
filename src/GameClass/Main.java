@@ -439,8 +439,12 @@ public class Main extends Application{
 				}
 				break;
 			}	
+			door.setDirection('S');
+			castles.add( new Castle(playfieldLayer, my_castle_S, 300, 100, Integer.toString(6969), 0, 1, taken, door, 3, 3, 3, true));
+			castles.get(castles.size()-1).addToLayer();
 			
-			
+			castles.add( new Castle(playfieldLayer, my_castle_S, 300, 200, Integer.toString(420), 0, 1, taken, door, 3, 3, 3, true));
+			castles.get(castles.size()-1).addToLayer();
 			
 			my = false ;
 			generated_taken = rnd.nextInt(2);
@@ -747,6 +751,30 @@ public class Main extends Application{
 						+ "                                              Treasure : "+castle.getTreasure());
 		
 	}
+	
+	/*private void checkCollisions() {
+		collision = false;
+
+		for (Enemy enemy : enemies) {
+			for (Missile missile : missiles) {
+				if (missile.collidesWith(enemy)) {
+					enemy.damagedBy(missile);
+					missile.remove();
+					collision = true;
+					scoreValue += 10 + (Settings.SCENE_HEIGHT - player.getY()) / 10;
+				}
+			}
+
+			if (player.collidesWith(enemy)) {
+				collision = true;
+				enemy.remove();
+				player.damagedBy(enemy);
+				if (player.getHealth() < 1)
+					gameOver();
+			}
+		}
+
+	}*/
 	
 	@SuppressWarnings("unused")
 	private void ShowCenter(String texte, boolean stop_game_loop) {

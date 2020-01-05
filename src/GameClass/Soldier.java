@@ -130,11 +130,21 @@ public abstract class Soldier extends Sprite {
 	}
 	
 	public void moveTo(Castle castle) {
-		if (this.x < castle.getX()) {
+		if (this.x == castle.getX()) {
+			if (this.y > castle.getY()) moveUp();
+			else moveDown();
+			return ;
+		}
+		else if (this.y == castle.getY()) {
+			if (this.x > castle.getX()) moveLeft();
+			else moveRight();
+			return ;
+		}
+		else if (this.x < castle.getX()) {
 			this.dx = this.speed ;
 			this.dy = (this.y-castle.getY())/(this.x-castle.getX());
 		}
-		else {
+		else if (this.x > castle.getX()){
 			this.dx = -this.speed ;
 			this.dy = (castle.getY()-this.y)/(castle.getX()-this.x);
 		}
