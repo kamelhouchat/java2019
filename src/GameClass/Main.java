@@ -91,7 +91,7 @@ public class Main extends Application{
 		playfieldLayer = new Pane();
 		root.getChildren().add(playfieldLayer);
 		
-		if (Settings.SCENE_WIDTH < 100) {   // CALCULE A FAIRE
+		if (Settings.SCENE_WIDTH < 650 || Settings.TOTAL_PLAYERS > Settings.SCENE_WIDTH/80) {   // CALCULE A FAIRE
 			Stage error = new Stage();
 			error.setResizable(false);
 			error.initOwner(primaryStage);
@@ -189,7 +189,7 @@ public class Main extends Application{
 						});
 
 						//MANAGE COLLUSION
-						checkCollisions();
+						check_collisions();
 						
 						
 						
@@ -366,7 +366,7 @@ public class Main extends Application{
 					for(int j = 0; j < castles.size(); j++) {
 						double current_caslte_x = castles.get(j).getX(); 
 						double current_caslte_y = castles.get(j).getY();
-						if ( castles.get(j).dist(current_caslte_x, generated_x, current_caslte_y, generated_y) < Settings.MIN_DISTANCE_2_CASTLES)
+						if ( Math.sqrt((generated_y - current_caslte_y) * (generated_y - current_caslte_y) + (generated_x - current_caslte_x) * (generated_x - current_caslte_x)) < Settings.MIN_DISTANCE_2_CASTLES)
 							break;
 						else
 							if(j == castles.size()-1)
@@ -377,9 +377,12 @@ public class Main extends Application{
 			
 			Door door = new Door();
 			generated_treasure = rnd.nextInt(6000 - 1000 + 1) + 1000 ;
-			generated_soldier_o = rnd.nextInt(40 - 20 + 1) + 20 ; 
+			/*generated_soldier_o = rnd.nextInt(40 - 20 + 1) + 20 ; 
 			generated_soldier_p = rnd.nextInt(40 - 20 + 1) + 20 ;
-			generated_soldier_k = rnd.nextInt(40 - 20 + 1) + 20 ;
+			generated_soldier_k = rnd.nextInt(40 - 20 + 1) + 20 ;*/
+			generated_soldier_o = 1; 
+			generated_soldier_p =  1;
+			generated_soldier_k = 1;
 			generated_level = rnd.nextInt(13 - 8 + 1) + 8 ;
 			
 			switch(door.getDirection()) {
@@ -450,10 +453,8 @@ public class Main extends Application{
 					taken = false ;
 					break ;
 			}
-			if (i == 0) {
-				taken = true ;
-				my = true;
-			}
+			if (i == 0)	taken = true ;
+
 			if (i == 1) taken = false ;
 		}
 
@@ -746,7 +747,7 @@ public class Main extends Application{
 		
 	}
 	
-	private void checkCollisions() {
+	private void check_collisions() {
 	
 		for (Castle castle : castles) {
 			for (Target target : targets) {
@@ -759,9 +760,13 @@ public class Main extends Application{
 						else if (castle.equals(target.getTargetted())) {
 							target.damageTarget(knight);
 						}
-						else {
+						/*else if (!castle.equals(target.getAttacking())){
 							
-						}
+							circumvention(knight, castle);
+						}*/
+					}
+					if(knight.collideWith_Near(castle) && !castle.equals(target.getTargetted()) && !castle.equals(target.getAttacking()) ) {
+						circumvention(knight, castle);
 					}
 				});
 				target.getSent_onagers_list().forEach(onager -> {
@@ -773,9 +778,12 @@ public class Main extends Application{
 						else if (castle.equals(target.getTargetted())) {
 							target.damageTarget(onager);
 						}
-						else {
-							
-						}
+						/*else if (!castle.equals(target.getAttacking())){
+							circumvention(onager, castle);
+						}*/
+					}
+					if(onager.collideWith_Near(castle) && !castle.equals(target.getTargetted()) && !castle.equals(target.getAttacking()) ) {
+						circumvention(onager, castle);
 					}
 				});
 				target.getSent_pikeman_list().forEach(pikeman -> {
@@ -787,14 +795,104 @@ public class Main extends Application{
 						else if (castle.equals(target.getTargetted())) {
 							target.damageTarget(pikeman);
 						}
-						else {
-							
-						}
+						/*else if (!castle.equals(target.getAttacking())){
+							circumvention(pikeman, castle);
+						}*/
+					}
+					if(pikeman.collideWith_Near(castle) && !castle.equals(target.getTargetted()) && !castle.equals(target.getAttacking()) ) {
+						circumvention(pikeman, castle);
 					}
 				});
 			}
 		}
 
+	}
+	
+	public void circumvention(Soldier soldier, Castle castle) {
+		double soldierX = soldier.getX();
+		double soldierY = soldier.getY();
+		double castleX = castle.getX();
+		double castleY = castle.getY();
+		if (castleX > soldierX) {
+			if (castleY > soldierY) {
+				if (soldierY-60 <= castleY)
+					soldier.moveUp();
+				if (soldierX+60 >= castleX)
+					soldier.moveLeft();
+				else 
+					soldier.moveUp();
+			}
+			else if (castleY < soldierY) {
+				if (soldierY+60 >= castleY)
+					soldier.moveDown();
+				if (soldierX+60 >= castleX)
+					soldier.moveLeft();
+				else 
+					soldier.moveDown();
+			}
+		}
+		else if (castleX < soldierX) {
+			if (castleY > soldierY) {
+				if (soldierY+60 >= castleY)
+					soldier.moveUp();
+				if (soldierX-60 <= castleX)
+					soldier.moveRight();
+				else 
+					soldier.moveDown();
+			}
+			else if (castleY < soldierY) {
+				if (soldierY-60 <= castleY)
+					soldier.moveDown();
+				if (soldierX-60 <= castleX)
+					soldier.moveRight();
+				else 
+					soldier.moveUp();
+			}
+		}
+		else if (castleY > soldierY) {
+			if (castleX > soldierX) {
+				if (castleY > soldierY) {
+					if (soldierY+60 >= castleY)
+						soldier.moveUp();
+					if (soldierX+60 >= castleX)
+						soldier.moveRight();
+					else 
+						soldier.moveDown();
+				}
+			}
+			else if (castleX < soldierX) {
+				if (castleY > soldierY) {
+					if (soldierY+60 >= castleY)
+						soldier.moveUp();
+					if (soldierX-60 <= castleX)
+						soldier.moveRight();
+					else 
+						soldier.moveDown();
+				}
+			}
+		}
+		else if (castleY < soldierY) {
+			if (castleX > soldierX) {
+				if (castleY > soldierY) {
+					if (soldierY-60 <= castleY)
+						soldier.moveDown();
+					if (soldierX+60 >= castleX)
+						soldier.moveLeft();
+					else 
+						soldier.moveUp();
+				}
+			}
+			else if (castleX < soldierX) {
+				if (castleY > soldierY) {
+					if (soldierY-60 <= castleY)
+						soldier.moveDown();
+					if (soldierX-60 <= castleX)
+						soldier.moveRight();
+					else 
+						soldier.moveUp();
+				}
+			}
+		}
 	}
 	
 	@SuppressWarnings("unused")

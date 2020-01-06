@@ -7,8 +7,6 @@ import javafx.scene.layout.Pane;
 public abstract class Soldier extends Sprite {
 
 	private static final long serialVersionUID = -8131521196948972410L;
-	private int product_cost ; 
-	private int product_time ; 
 	private int health	;
 	private double damage ;
 	private double speed ;
@@ -34,8 +32,6 @@ public abstract class Soldier extends Sprite {
 			double damage, double speed) {
 		super(layer, image, x, y);
 		removeFromLayer();
-		this.product_cost = product_cost;
-		this.product_time = product_time;
 		this.health = health;
 		this.damage = damage;
 		this.speed = speed ;
@@ -47,14 +43,6 @@ public abstract class Soldier extends Sprite {
 
 	public void setSpeed(double speed) {
 		this.speed = speed;
-	}
-	
-	public void setProduct_cost(int product_cost) {
-		this.product_cost = product_cost;
-	}
-
-	public void setProduct_time(int product_time) {
-		this.product_time = product_time;
 	}
 
 	public void setHealth(int health) {
@@ -168,21 +156,6 @@ public abstract class Soldier extends Sprite {
 		}
 		move();
 	}
-	
-	public void moveToOutOfDoor(Castle caslte) {
-		
-	}
-	
-	public void moveInCircle(double a, double r, double cx, double cy) {//calcul a faire	
-    	centerX = ( cx + r * Math.cos(a)) - 1;
-    	centerY = ( cy + r * Math.sin(a)) - 1;
-    	this.updateUI();
-    }
-	
-	public boolean nearCastle(Sprite castle) {
-    	return ( dist(castle.getCenterX(), this.getCenterX(), castle.getCenterY(), this.getCenterY())) <= 
-    			dist(castle.getCenterX(), castle.getX(), castle.getCenterY(), castle.getY()) + dist(this.getCenterX(), this.getX(), this.getCenterY(), this.getY()) ;
-    }
 	
 	/**
 	 * Test if the soldier is still alive

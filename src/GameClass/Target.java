@@ -2,9 +2,10 @@ package GameClass;
 
 import java.util.ArrayList;
 
+import javafx.scene.image.Image;
+
 public class Target {
 	
-	private int troop_size = 0 ; 
 	private int troup_out_door = 0 ;
 	private boolean out_of_door = false ;
 	private Castle attacking;
@@ -39,7 +40,6 @@ public class Target {
 		this.sent_onagers_list = sent_onagers_list;
 		this.sent_pikeman_list = sent_pikeman_list;
 		this.sent_knight_list = sent_knight_list;
-		this.troop_size = this.sent_knight_list.size() + this.sent_onagers_list.size() + this.sent_pikeman_list.size() ;
 		
 	}
 
@@ -173,48 +173,6 @@ public class Target {
 		this.out_of_door = this.troup_out_door == sent_knight_list.size() + sent_onagers_list.size() + sent_pikeman_list.size();
 	}
 	
-	
-	
-	/*public void send_soldiers() {
-		sent_knight_list.forEach(knight -> {
-			if (!knight.collidesWith(this.targetted))
-				knight.moveTo(targetted);
-			else {
-				if (this.targetted.isMy()) {
-					targetted.getKnight_list().add(new Knight(targetted.getLayer(), targetted.knight_image, targetted.getCenterX()-targetted.knight_image.getWidth()/2, targetted.getCenterY()-targetted.knight_image.getHeight()/2));
-					knight.setRemovable(true);
-				}
-				else
-					damageTarget(knight);
-			}
-		});	
-		sent_onagers_list.forEach(onager -> {
-			if (!onager.collidesWith(this.targetted))
-				onager.moveTo(targetted);
-			else {
-				if (this.targetted.isMy()) {
-					targetted.getOnagers_list().add(new Onager(targetted.getLayer(), targetted.onager_image, targetted.getCenterX()-targetted.onager_image.getWidth()/2, targetted.getCenterY()-targetted.onager_image.getHeight()/2));
-					onager.setRemovable(true);
-				}
-				else
-					damageTarget(onager);
-			}
-		});
-		sent_pikeman_list.forEach(pikeman -> {
-			if (!pikeman.collidesWith(this.targetted))
-				pikeman.moveTo(targetted);
-			else {
-				if (this.targetted.isMy()) {
-					targetted.getPikeman_list().add(new Pikeman(targetted.getLayer(), targetted.pikeman_image, targetted.getCenterX()-targetted.pikeman_image.getWidth()/2, targetted.getCenterY()-targetted.pikeman_image.getHeight()/2));
-					pikeman.setRemovable(true);
-				}
-				else
-					damageTarget(pikeman);
-			}
-				
-		});
-	}*/
-	
 	/**
 	 * Move the troops to the castle target
 	 */
@@ -226,6 +184,7 @@ public class Target {
 	
 	/**
 	 * Damage the castle target by soldier, and apply each point of damage of the soldier in a random way on the troops of castle
+	 * If the soldiers of the attacked castle are all dead the attacker wins the castle
 	 * @param soldier The soldier who attacks
 	 */
 	public void damageTarget(Soldier soldier) {
@@ -234,6 +193,20 @@ public class Target {
 			targetted.setDuke(attacking.getDuke());
 			if (attacking.isMy()) {
 				targetted.setMy(true);
+				switch (targetted.getDoor().getDirection()) {
+				case ('N'):
+					targetted.setView(new Image(getClass().getResource("/images/my_castleN.jpg").toExternalForm(), Settings.CASTLE_WIDTH, Settings.CASTLE_WIDTH, true, true));
+					break;
+				case ('E'):
+					targetted.setView(new Image(getClass().getResource("/images/my_castleE.jpg").toExternalForm(), Settings.CASTLE_WIDTH, Settings.CASTLE_WIDTH, true, true));
+					break;
+				case ('S'):
+					targetted.setView(new Image(getClass().getResource("/images/my_castleS.jpg").toExternalForm(), Settings.CASTLE_WIDTH, Settings.CASTLE_WIDTH, true, true));
+					break;
+				case ('O'):
+					targetted.setView(new Image(getClass().getResource("/images/my_castleO.jpg").toExternalForm(), Settings.CASTLE_WIDTH, Settings.CASTLE_WIDTH, true, true));
+					break;
+				}
 			}
 		}
 		soldier.setRemovable(true);

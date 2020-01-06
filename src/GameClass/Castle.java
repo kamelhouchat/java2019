@@ -52,27 +52,23 @@ public class Castle extends Sprite implements Serializable{
 	public Castle(Pane layer, Image image, double x, double y, String duke, int treasure, 
 			int level, boolean taken, Door door, int nbOnagres, int nbPikemans, int nbKnights, boolean my) {
 		super(layer, image, x, y);
-		this.removeFromLayer();
 		this.duke = duke;
 		this.treasure = treasure;
 		this.level = level;
 		this.taken = taken;
 		this.door = door;
 		this.my = my;
-		for (int i = 0; i < nbOnagres; i++) {
+		for (int i = 0; i < nbOnagres; i++) 
 			this.onagers_list.add(new Onager(layer, onager_image, this.getCenterX()-onager_image.getWidth()/2, this.getCenterY()-onager_image.getHeight()/2));
-			//this.onagers_list.get(i).removeFromLayer();
-		}
+
 		
-		for (int i = 0; i < nbPikemans; i++) {
+		for (int i = 0; i < nbPikemans; i++) 
 			this.pikeman_list.add(new Pikeman(layer, pikeman_image, this.getCenterX()-pikeman_image.getWidth()/2, this.getCenterY()-pikeman_image.getHeight()/2));
-			//this.pikeman_list.get(i).removeFromLayer();
-		}
+
 		
-		for (int i = 0; i < nbKnights; i++) {
+		for (int i = 0; i < nbKnights; i++) 
 			this.knight_list.add(new Knight(layer, knight_image, this.getCenterX()-knight_image.getWidth()/2, this.getCenterY()-knight_image.getHeight()/2));
-			//this.knight_list.get(i).removeFromLayer();
-		}
+
 		
 		if (this.taken)
 			this.returned = this.level * 10 ;
