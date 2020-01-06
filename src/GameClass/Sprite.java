@@ -7,9 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
 public abstract class Sprite implements Serializable{
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 3676656290971406742L;
 
 	private Pane layer ;
@@ -18,20 +16,19 @@ public abstract class Sprite implements Serializable{
 	
     protected double x;
     protected double y;
-    protected double centerX;
-    protected double centerY;
-    public void setCenterX(double centerX) {
-		this.centerX = centerX;
-	}
-
-	public void setCenterY(double centerY) {
-		this.centerY = centerY;
-	}
-
 	private double w;
     private double h;
+    
+    protected double centerX;
+    protected double centerY;
 
-
+    /**
+	 * Default ABSTRACT constructor, which constructs a new Sprite (Castle || Soldier)
+	 * @param layer Pane
+	 * @param image Image of Sprite
+	 * @param x Layouts x 
+	 * @param y Layouts y
+     */
     public Sprite(Pane layer, Image image, double x, double y) {
     	this.x = x;
 		this.y = y;
@@ -48,34 +45,35 @@ public abstract class Sprite implements Serializable{
     	return layer ;
     }
     
+    /**
+     * Add image view to layer
+     */
     public void addToLayer() {
         this.layer.getChildren().add(this.imageView);
     }
 
+    /**
+     * Remove image view from layer
+     */
     public void removeFromLayer() {
         this.layer.getChildren().remove(this.imageView);
     }
-    
+
     public double getX() {
         return x;
     }
 
-    public void setX(double x) {
-        this.x = x;
-    }
-
     public double getY() {
         return y;
-    }
-
-    public void setY(double y) {
-        this.y = y;
     }
     
     protected ImageView getView() {
         return imageView;
     }
     
+    /**
+     * Relocate imageView in pane
+     */
     public void updateUI() {
         imageView.relocate(x, y);
     }
@@ -96,6 +94,11 @@ public abstract class Sprite implements Serializable{
         return y + h * 0.5;
     }
     
+    /**
+     * Test if we are colluding with sprite passed in parameter
+     * @param sprite Sprite with whom we want to know if we are colluding 
+     * @return true if we are in collusion else false
+     */
     public boolean collidesWith(Sprite sprite) {
     	return getView().getBoundsInParent().intersects(sprite.getView().getBoundsInParent());
     }
@@ -110,6 +113,9 @@ public abstract class Sprite implements Serializable{
     	return 2 * Math.PI * angle / dist(xc, x2, yc, y2);
     }
 
+    /**
+     * Test if the castle passed in parameter is the same
+     */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

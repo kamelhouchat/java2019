@@ -1,6 +1,7 @@
 package GameClass;
 
 public class Settings {
+	
 	public static double SCENE_WIDTH = 750;
     public static double SCENE_HEIGHT = 500;
 	public static final double STATUS_BAR_HEIGHT = SCENE_HEIGHT/5;
@@ -27,6 +28,11 @@ public class Settings {
     public static final int    ONAGER_HEALTH = 5;
     public static final double ONAGER_DAMAGE = 10.0;
     
+    /**
+     * TOTAL_PLAYERS -> Number of castles
+     * MIN_DISTANCE_2_CASTLES -> Minimum distance between two castles
+     * TIME_PER_LAP -> The time between two towers
+     */
     public static final int TOTAL_PLAYERS = 3;
     public static final int MIN_DISTANCE_2_CASTLES = 250;
     static final long TIME_PER_LAP = 60_000_000 ; //1000 * 1000 * 1000 ;//

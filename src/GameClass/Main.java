@@ -174,7 +174,7 @@ public class Main extends Application{
 								if (!target.isOut_of_door())
 									target.send_out_of_door();
 								if (target.isOut_of_door()) {
-									target.send_target_to_castle();
+									target.send_soldiers();
 									removeSoldiers(target.getSent_knight_list());
 									removeSoldiers(target.getSent_onagers_list());
 									removeSoldiers(target.getSent_pikeman_list());	
@@ -188,7 +188,8 @@ public class Main extends Application{
 							removeSoldiers(castle.getPikeman_list());
 						});
 
-					
+						//MANAGE COLLUSION
+						checkCollisions();
 						
 						
 						
@@ -438,14 +439,7 @@ public class Main extends Application{
 					castles.get(castles.size()-1).addToLayer();
 				}
 				break;
-			}	
-			door.setDirection('S');
-			castles.add( new Castle(playfieldLayer, my_castle_S, 300, 100, Integer.toString(6969), 0, 1, taken, door, 3, 3, 3, true));
-			castles.get(castles.size()-1).addToLayer();
-			
-			castles.add( new Castle(playfieldLayer, my_castle_S, 300, 200, Integer.toString(420), 0, 1, taken, door, 3, 3, 3, true));
-			castles.get(castles.size()-1).addToLayer();
-			
+			}
 			my = false ;
 			generated_taken = rnd.nextInt(2);
 			switch (generated_taken) {
@@ -752,29 +746,56 @@ public class Main extends Application{
 		
 	}
 	
-	/*private void checkCollisions() {
-		collision = false;
-
-		for (Enemy enemy : enemies) {
-			for (Missile missile : missiles) {
-				if (missile.collidesWith(enemy)) {
-					enemy.damagedBy(missile);
-					missile.remove();
-					collision = true;
-					scoreValue += 10 + (Settings.SCENE_HEIGHT - player.getY()) / 10;
-				}
-			}
-
-			if (player.collidesWith(enemy)) {
-				collision = true;
-				enemy.remove();
-				player.damagedBy(enemy);
-				if (player.getHealth() < 1)
-					gameOver();
+	private void checkCollisions() {
+	
+		for (Castle castle : castles) {
+			for (Target target : targets) {
+				target.getSent_knight_list().forEach(knight -> {
+					if (knight.collidesWith(castle)) {
+						if (castle.isMy() && castle.equals(target.getTargetted())) {
+							target.getTargetted().getKnight_list().add(new Knight(target.getTargetted().getLayer(), target.getTargetted().knight_image, target.getTargetted().getCenterX()-target.getTargetted().knight_image.getWidth()/2, target.getTargetted().getCenterY()-target.getTargetted().knight_image.getHeight()/2));
+							knight.setRemovable(true);
+						}
+						else if (castle.equals(target.getTargetted())) {
+							target.damageTarget(knight);
+						}
+						else {
+							
+						}
+					}
+				});
+				target.getSent_onagers_list().forEach(onager -> {
+					if (onager.collidesWith(castle)) {
+						if (castle.isMy() && castle.equals(target.getTargetted())) {
+							target.getTargetted().getOnagers_list().add(new Onager(target.getTargetted().getLayer(), target.getTargetted().onager_image, target.getTargetted().getCenterX()-target.getTargetted().onager_image.getWidth()/2, target.getTargetted().getCenterY()-target.getTargetted().onager_image.getHeight()/2));
+							onager.setRemovable(true);
+						}
+						else if (castle.equals(target.getTargetted())) {
+							target.damageTarget(onager);
+						}
+						else {
+							
+						}
+					}
+				});
+				target.getSent_pikeman_list().forEach(pikeman -> {
+					if (pikeman.collidesWith(castle)) {
+						if (castle.isMy() && castle.equals(target.getTargetted())) {
+							target.getTargetted().getPikeman_list().add(new Pikeman(target.getTargetted().getLayer(), target.getTargetted().pikeman_image, target.getTargetted().getCenterX()-target.getTargetted().pikeman_image.getWidth()/2, target.getTargetted().getCenterY()-target.getTargetted().pikeman_image.getHeight()/2));
+							pikeman.setRemovable(true);
+						}
+						else if (castle.equals(target.getTargetted())) {
+							target.damageTarget(pikeman);
+						}
+						else {
+							
+						}
+					}
+				});
 			}
 		}
 
-	}*/
+	}
 	
 	@SuppressWarnings("unused")
 	private void ShowCenter(String texte, boolean stop_game_loop) {

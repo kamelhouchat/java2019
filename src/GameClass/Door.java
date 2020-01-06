@@ -5,12 +5,12 @@ import java.util.Random;
 
 public class Door implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -6750353227834583539L;
 	private char direction ;
 
+	/**
+	 * Default constructor, which generate a random direction (Door)
+	 */
 	public Door() {
 		Random r = new Random();
 		int generated = r.nextInt(4);
@@ -32,9 +32,6 @@ public class Door implements Serializable{
 
 	public char getDirection() {
 		return direction;
-	}
-	public void setDirection(char dir ) {
-		this.direction = dir ;
 	}
 	
 }

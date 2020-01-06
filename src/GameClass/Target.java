@@ -16,7 +16,17 @@ public class Target {
 	private ArrayList<Soldier> sent_pikeman_list = new ArrayList<Soldier>();
 	private ArrayList<Soldier> sent_knight_list = new ArrayList<Soldier>();
 	
-	
+	/**
+	 * Default constructor, which constructs a new Target
+	 * @param attacking The attacking castle
+	 * @param targetted The castle target
+	 * @param nb_onager The number of Onager we want to send
+	 * @param nb_pikeman The number of Pikeman we want to send
+	 * @param nb_knight The number of Knight we want to send
+	 * @param sent_onagers_list The list of Onager we send
+	 * @param sent_pikeman_list The list of Pikeman we send
+	 * @param sent_knight_list The list of Knight we send
+	 */
 	public Target(Castle attacking, Castle targetted, int nb_onager, int nb_pikeman, int nb_knight,
 			ArrayList<Soldier> sent_onagers_list, ArrayList<Soldier> sent_pikeman_list,
 			ArrayList<Soldier> sent_knight_list) {
@@ -36,40 +46,17 @@ public class Target {
 	public ArrayList<Soldier> getSent_onagers_list() {
 		return sent_onagers_list;
 	}
-
-
-	public void setSent_onagers_list(ArrayList<Soldier> sent_onagers_list) {
-		this.sent_onagers_list = sent_onagers_list;
-	}
-	
 	public ArrayList<Soldier> getSent_pikeman_list() {
 		return sent_pikeman_list;
 	}
-
-	public void setSent_pikeman_list(ArrayList<Soldier> sent_pikeman_list) {
-		this.sent_pikeman_list = sent_pikeman_list;
-	}
-
 	public ArrayList<Soldier> getSent_knight_list() {
 		return sent_knight_list;
 	}
-
-	public void setSent_knight_list(ArrayList<Soldier> sent_knight_list) {
-		this.sent_knight_list = sent_knight_list;
-	}
-
 	public Castle getAttacking() {
 		return attacking;
 	}
-	
-	public void setAttacking(Castle attacking) {
-		this.attacking = attacking;
-	}
 	public Castle getTargetted() {
 		return targetted;
-	}
-	public void setTargetted(Castle targetted) {
-		this.targetted = targetted;
 	}
 	public int getNb_onager() {
 		return nb_onager;
@@ -93,6 +80,13 @@ public class Target {
 		return out_of_door;
 	}
 
+	/**
+	 * Function to send troops, type by type, from the slowest to the fastest, 
+	 * depending on the position of the door of the attacking castle.
+	 * 
+	 * It puts the value of out_of_door on true whene it finishes.
+	 * 
+	 */
 	public void send_out_of_door() {
 		switch (attacking.getDoor().getDirection()) {
 		case 'S' :
@@ -181,7 +175,7 @@ public class Target {
 	
 	
 	
-	public void send_target_to_castle() {			
+	/*public void send_soldiers() {
 		sent_knight_list.forEach(knight -> {
 			if (!knight.collidesWith(this.targetted))
 				knight.moveTo(targetted);
@@ -219,8 +213,21 @@ public class Target {
 			}
 				
 		});
+	}*/
+	
+	/**
+	 * Move the troops to the castle target
+	 */
+	public void send_soldiers() {
+		sent_knight_list.forEach(knight -> knight.moveTo(targetted));	
+		sent_onagers_list.forEach(onager -> onager.moveTo(targetted));
+		sent_pikeman_list.forEach(pikeman -> pikeman.moveTo(targetted));
 	}
 	
+	/**
+	 * Damage the castle target by soldier, and apply each point of damage of the soldier in a random way on the troops of castle
+	 * @param soldier The soldier who attacks
+	 */
 	public void damageTarget(Soldier soldier) {
 		if (!targetted.damagedBy(soldier)) {
 			targetted.getProduction_queue().clear();

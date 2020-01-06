@@ -7,6 +7,11 @@ public class Production_unit {
 	private boolean is_level ;
 	private boolean is_soldier ;
 	
+	/**
+	 * Constructor, which constructs a new soldier production unit
+	 * @param type_soldier a type of soldier : 'O' -> Onager | 'K' -> Knight | 'P' -> Pikeman
+	 * @param remaining_to_production remaining turns before production
+	 */
 	public Production_unit(char type_soldier, int remaining_to_production) {
 		super();
 		this.type_soldier = type_soldier ;
@@ -14,6 +19,12 @@ public class Production_unit {
 		is_level = false ;
 		is_soldier = true ;
 	}
+	
+	/**
+	 * Constructor, which constructs a new level production unit
+	 * @param level The level to product
+	 * @param remaining_to_production remaining turns before production
+	 */
 	public Production_unit(int level, int remaining_to_production) {
 		super();
 		this.level_to_product = level;
@@ -48,6 +59,10 @@ public class Production_unit {
 		this.remaining_to_production = remaining_to_production;
 	}
 	
+	/**
+	 * Function to decrease the number of laps remaining before production and test if we can start production
+	 * @return true if we can start production else false
+	 */
 	public boolean check_end_of_production_and_decrementing() {
 		 this.remaining_to_production -- ;
 		 if (remaining_to_production == 0) 

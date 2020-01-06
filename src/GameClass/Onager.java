@@ -4,9 +4,11 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
 /**
- * 
- * @author kamel
- *
+ * Default constructor, which constructs a new Onager
+ * @param layer Pane
+ * @param image Image of Onager
+ * @param x Layouts x 
+ * @param y Layouts y
  */
 
 public class Onager extends Soldier{

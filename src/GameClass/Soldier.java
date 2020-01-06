@@ -1,15 +1,11 @@
 package GameClass;
 
-import com.sun.org.apache.xml.internal.security.utils.HelperNodeList;
-
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
 
 public abstract class Soldier extends Sprite {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -8131521196948972410L;
 	private int product_cost ; 
 	private int product_time ; 
@@ -22,6 +18,18 @@ public abstract class Soldier extends Sprite {
     protected double dx;
     protected double dy;
 
+    /**
+	 * Default ABSTRACT constructor, which constructs a new Soldier
+	 * @param layer Pane
+	 * @param image Image of Soldier
+	 * @param x Layouts x 
+	 * @param y Layouts y
+     * @param product_cost The price of the soldier in florins
+     * @param product_time The number of turns necessary for the production of the soldier
+     * @param health The health of the soldier
+     * @param damage The damage of the soldier (When he attacks a castle)
+     * @param speed The spped of the soldier
+     */
 	public Soldier(Pane layer, Image image, double x, double y, int product_cost, int product_time, int health,
 			double damage, double speed) {
 		super(layer, image, x, y);
@@ -40,25 +48,13 @@ public abstract class Soldier extends Sprite {
 	public void setSpeed(double speed) {
 		this.speed = speed;
 	}
-
-	public int getProduct_cost() {
-		return product_cost;
-	}
 	
 	public void setProduct_cost(int product_cost) {
 		this.product_cost = product_cost;
 	}
 
-	public int getProduct_time() {
-		return product_time;
-	}
-
 	public void setProduct_time(int product_time) {
 		this.product_time = product_time;
-	}
-
-	public int getHealth() {
-		return health;
 	}
 
 	public void setHealth(int health) {
@@ -97,38 +93,60 @@ public abstract class Soldier extends Sprite {
 		this.dy = dy;
 	}
 
+	/**
+	 * Move a soldier on a slope after assigning a value to Dx and Dy
+	 */
 	public void move() {
         x += dx;
         y += dy * dx;
         this.updateUI();
     }
 	
+	/**
+	 * Move a solider in line after assigning a value to Dx and Dy
+	 */
 	public void move_in_line() {
         x += dx;
         y += dy;
         this.updateUI();
     }
 	
+	/**
+	 * Assign a speed of soldier to Dx and call move_in_line to move Left 
+	 */
 	public void moveLeft() {
 		setDx(-getSpeed());
 		move_in_line();
 	}
 	
+	/**
+	 * Assign a speed of soldier to Dx and call move_in_line to move Right 
+	 */
 	public void moveRight() {
 		setDx(getSpeed());
 		move_in_line();
 	}
 	
+	/**
+	 * Assign a speed of soldier to Dy and call move_in_line to move Up 
+	 */
 	public void moveUp() {
 		setDy(-getSpeed());
 		move_in_line();
 	}
 	
+	/**
+	 * Assign a speed of soldier to Dy and call move_in_line to move Down
+	 */
 	public void moveDown() {
 		setDy(getSpeed());
 		move_in_line();
 	}
 	
+	/**
+	 * Calculate the line between the soldier and the castle passed in parameter and move one step in this line
+	 * @param castle The castle where we want to go
+	 */
 	public void moveTo(Castle castle) {
 		if (this.x == castle.getX()) {
 			if (this.y > castle.getY()) moveUp();
@@ -166,23 +184,40 @@ public abstract class Soldier extends Sprite {
     			dist(castle.getCenterX(), castle.getX(), castle.getCenterY(), castle.getY()) + dist(this.getCenterX(), this.getX(), this.getCenterY(), this.getY()) ;
     }
 	
+	/**
+	 * Test if the soldier is still alive
+	 * @return true if yes else false
+	 */
     public boolean isAlive() {
         return health > 0;
     }
 
+    /**
+     * Apply all the damage points of the soldier passed in parameter
+     * @param soldier The soldier who attacks
+     */
     public void damagedBy( Soldier soldier) {
         health -= soldier.getDamage();
     }
     
+    /**
+     * Set removability to true 
+     */
     public void remove() {
         this.removable = true;
     }	
 	
+    /**
+     * Check if the soldier is not alive, if true, then set call remove
+     */
 	public void checkRemovability() {
 		if (!isAlive())
 			remove();
 	}
 	
+	/**
+	 * Apply a single point of damage
+	 */
 	public void damaged() {
 		health -= 1 ;
 	}

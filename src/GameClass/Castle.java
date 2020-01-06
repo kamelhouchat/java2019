@@ -33,7 +33,22 @@ public class Castle extends Sprite implements Serializable{
 	Image pikeman_image = new Image(getClass().getResource("/images/pikemen.png").toExternalForm(), Settings.SOLDIER_WIDTH, Settings.SOLDIER_WIDTH, true, true);
 	Image knight_image = new Image(getClass().getResource("/images/knight.png").toExternalForm(), Settings.SOLDIER_WIDTH, Settings.SOLDIER_WIDTH, true, true);
 	
-	
+	/**
+	 * Default constructor, which constructs a new Castle
+	 * @param layer Pane
+	 * @param image Image of castle
+	 * @param x Layouts x 
+	 * @param y Layouts y
+	 * @param duke The name of the duc
+	 * @param treasure Treasure
+	 * @param level Level of the castle
+	 * @param taken Boolean to tell if the castle is taken
+	 * @param door Door instance that generate a random door
+	 * @param nbOnagres Number of onagers
+	 * @param nbPikemans Number of pikemen
+	 * @param nbKnights Number of knights
+	 * @param my Boolean to tell if the castle belongs to the player
+	 */
 	public Castle(Pane layer, Image image, double x, double y, String duke, int treasure, 
 			int level, boolean taken, Door door, int nbOnagres, int nbPikemans, int nbKnights, boolean my) {
 		super(layer, image, x, y);
@@ -70,46 +85,33 @@ public class Castle extends Sprite implements Serializable{
 		return production_queue;
 	}
 
-
-	public void setProduction_queue(ArrayList<Production_unit> production_queue) {
-		this.production_queue = production_queue;
-	}
-
-
 	public String getDuke() {
 		return duke;
 	}
-
 
 	public void setDuke(String duke) {
 		this.duke = duke;
 	}
 
-
 	public int getTreasure() {
 		return treasure;
 	}
-
 
 	public void setTreasure(int treasure) {
 		this.treasure = treasure;
 	}
 
-
 	public int getLevel() {
 		return level;
 	}
-
 
 	public void setLevel(int level) {
 		this.level = level;
 	}
 
-
 	public boolean isTaken() {
 		return taken;
 	}
-
 
 	public void setTaken(boolean taken) {
 		this.taken = taken;
@@ -119,60 +121,37 @@ public class Castle extends Sprite implements Serializable{
 		return door;
 	}
 
-
-	public void setDoor(Door door) {
-		this.door = door;
-	}
-
 	public int getReturned() {
 		return returned;
 	}
-
 
 	public void setReturned(int returned) {
 		this.returned = returned;
 	}
 
-
 	public ArrayList<Soldier> getOnagers_list() {
 		return onagers_list;
 	}
-
-
-	public void setOnagers_list(ArrayList<Soldier> onagers_list) {
-		this.onagers_list = onagers_list;
-	}
-
 
 	public ArrayList<Soldier> getPikeman_list() {
 		return pikeman_list;
 	}
 
-
-	public void setPikeman_list(ArrayList<Soldier> pikeman_list) {
-		this.pikeman_list = pikeman_list;
-	}
-
-
 	public ArrayList<Soldier> getKnight_list() {
 		return knight_list;
 	}
-
-
-	public void setKnight_list(ArrayList<Soldier> knight_list) {
-		this.knight_list = knight_list;
-	}
-
 
 	public boolean isMy() {
 		return my;
 	}
 
-
 	public void setMy(boolean my) {
 		this.my = my;
 	} 
 
+	/**
+	 * Update returned whene the level of the castle is changed
+	 */
 	public void update_returned() {
 		if (this.taken)
 			this.returned = this.level * 10 ;
@@ -180,29 +159,49 @@ public class Castle extends Sprite implements Serializable{
 			this.returned = (this.level * 10)/10;
 	}
 	
+	/**
+	 * Update treasure compared to returned
+	 */
 	public void update_treasure() {
 		this.treasure += this.returned;
 	}
 
+	/**
+	 * Increase level by 1
+	 */
 	public void increment_level() {
 		this.level ++ ;
 	}
 	
+	/**
+	 * Damage the first onager of the onagers list
+	 */
 	public void damage_onager() {
 		onagers_list.get(0).damaged();
 		onagers_list.get(0).checkRemovability();
 	}
 	
+	/**
+	 * Damage the first knight of the knight list
+	 */
 	public void damage_knight() {
 		knight_list.get(0).damaged();
 		knight_list.get(0).checkRemovability();
 	}
 	
+	/**
+	 * Damage the first pikeman of the pikmen list
+	 */
 	public void damage_pikeman() {
 		pikeman_list.get(0).damaged();
 		pikeman_list.get(0).checkRemovability();
 	}
 	
+	/**
+	 * Apply each point of damage of the soldier in a random way on the troops of castle
+	 * @param soldier The soldier who attacks
+	 * @return true if the castle has enough troops to resist the attack, else false
+	 */
 	public boolean damagedBy(Soldier soldier) {
 		int generated = 0 ;
 		for (int i = 0; i < soldier.getDamage() ; i++) {
